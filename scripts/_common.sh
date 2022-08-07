@@ -30,7 +30,7 @@ warn () {
 }
 
 error () {
-  log_message "E" "$@"
+  _log "E" "$@"
   exit 1
 }
 
@@ -72,14 +72,13 @@ makedir () {
   _fileop mkdir "$@"
 }
 
-
 ### Additional Utilities
 
 check_program () {
   program=$1
-  package=${2:-"$1"}
+  package=${2:-"$program"}
   if ! $program --help 2>&1 > /dev/null; then
-    error 'program: `git` was not found and must be installed'
+    error "program: '$package' was not found and must be installed"
   fi
   debug "package '$package' is installed"
 }
@@ -98,4 +97,5 @@ confirm_yes () {
 
 #** Init **#
 
+info "checking for required binaries"
 check_program git
