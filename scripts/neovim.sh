@@ -22,7 +22,7 @@ ASTROCONFIG="$NCONFIG/lua/user"
 
 install_neovim () {
   # skip if neovim is already installed
-  if nvim --help 2>&1 >/dev/null; then
+  if nvim --help >/dev/null 2>&1; then
     info "neovim binary installed"
     return
   fi

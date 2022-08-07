@@ -77,7 +77,7 @@ makedir () {
 check_program () {
   program=$1
   package=${2:-"$program"}
-  if ! $program --help 2>&1 > /dev/null; then
+  if ! $program --help >/dev/null 2>&1; then
     error "program: '$package' was not found and must be installed"
   fi
   debug "package '$package' is installed"

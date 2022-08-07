@@ -32,3 +32,9 @@ if [ -d "$HOME/.pyenv" ]; then
   command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
   eval "$(pyenv init -)"
 fi
+
+# Cargo (Rust) support
+if [ -d "$HOME/.cargo" ]; then
+  export CARGO_ROOT="$HOME/.cargo"
+  command -v cargo >/dev/null || export PATH="$CARGO_ROOT/bin:$PATH"
+fi

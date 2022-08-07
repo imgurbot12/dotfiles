@@ -11,7 +11,7 @@ check_pyenv () {
 }
 
 install_pyenv () {
-  info "running pyenv using installer script"
+  info "running pyenv installer script"
   if curl https://pyenv.run | bash; then
     info "installer completed successfully"
     warn "ensure bash profile is installed to link pyenv to \$PATH"
