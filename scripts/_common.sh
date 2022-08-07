@@ -97,5 +97,11 @@ confirm_yes () {
 
 #** Init **#
 
+# ensure program is NOT running as root
+if whoami | grep -E '^root$' >/dev/null; then
+  error "script SHOULD NOT be run as root"
+  exit 1
+fi
+
 info "checking for required binaries"
 check_program git
