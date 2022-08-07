@@ -95,6 +95,14 @@ confirm_yes () {
   done
 }
 
+request_sudo () {
+  command=$1
+  info "user needs to run the following command as super user:"
+  echo "\n  sudo $command \n"
+  info "afterwards running the command run this installation script again"
+  exit 1
+}
+
 #** Init **#
 
 # ensure program is NOT running as root
@@ -105,3 +113,4 @@ fi
 
 info "checking for required binaries"
 check_program git
+check_program curl

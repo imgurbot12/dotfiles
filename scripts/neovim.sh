@@ -4,6 +4,9 @@
 
 #** Variables **#
 
+#: neovim downloadable appimage binary
+BINARY="https://github.com/neovim/neovim/releases/latest/download/nvim.appimage"
+
 #: repo configuration folder
 NEOVIM="$CONFIG/neovim"
 
@@ -16,6 +19,22 @@ ASTRONVIM="https://github.com/AstroNvim/AstroNvim"
 ASTROCONFIG="$NCONFIG/lua/user"
 
 #** Functions **#
+
+install_neovim () {
+  # skip if neovim is already installed
+  if nvim --help 2>&1 >/dev/null; then
+    info "neovim binary installed"
+    return
+  fi
+  # download and install neovim otherwise
+  download="/tmp/nvim.appimage"
+  info "downloading neovim appimage"
+  if [ ! -f "$download" ]; then
+    curl -L -o "$download" "$BINARY"
+    chmod +x "$download"
+  fi
+  request_sudo "mv -vf $download /usr/local/bin/nvim"
+}
 
 backup_config () {
   if [ ! -d "$NCONFIG" ]; then exit 0; fi
@@ -46,10 +65,11 @@ sync_neovim () {
 
 #** Init **#
 
-check_program nvim neovim
-
 case "$1" in
   "install")
+    install_neovim
+    check_program nvim neovim
+
     backup_config
     download_astronvim
     install_configs
