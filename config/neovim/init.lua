@@ -1,3 +1,20 @@
+
+-- wrapper to call telescope grep on active buffer
+function telescope_grep()
+  require("telescope.builtin").current_buffer_fuzzy_find()
+end
+
+-- wrapper to call telescope grep on the entire project
+function telescope_grep_all(settings)
+  require("telescope.builtin").live_grep(settings)
+end
+
+-- wrapper to call telescope to search only open files
+function telescope_grep_open()
+  telescope_grep_all({ grep_open_files=true })
+end
+
+-- configuration
 local config = {
 
   -- Configure AstroNvim updates
@@ -58,15 +75,13 @@ local config = {
   -- automatically pick-up stored data by this setting.)
   mappings = {
     -- first key is the mode
+    i = {
+      ["<C-f>"] = { telescope_grep, desc = "Grep current buffer" },
+      ["<CA-f>"] = { telescope_grep_all, desc = "Grep project files" },
+    },
     n = {
-      ["<C-f>"] = {
-          function()
-            require("telescope.builtin").live_grep({
-              grep_open_files=true
-            })
-          end,
-          desc = "Search words in file",
-      },
+      ["<C-f>"] = { telescope_grep, desc = "Grep current buffer" },
+      ["<CA-f>"] = { telescope_grep_all, desc = "Grep project files" },
       -- tab (buffer) navigation
       ["<Tab>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer tab" },
       -- menu nagivation controls rework

@@ -75,11 +75,14 @@ case "$1" in
     install_configs
     sync_neovim
     ;;
+  "push")
+    install_configs
+    ;;
   "update")
     install_configs
     sync_neovim
     ;;
   *)
-    error "invalid command. use <install/update>"
+    error "invalid command. use <install/update/push>"
     ;;
 esac
