@@ -1,16 +1,16 @@
 
 -- wrapper to call telescope grep on active buffer
-function telescope_grep()
+local function telescope_grep()
   require("telescope.builtin").current_buffer_fuzzy_find()
 end
 
 -- wrapper to call telescope grep on the entire project
-function telescope_grep_all(settings)
+local function telescope_grep_all(settings)
   require("telescope.builtin").live_grep(settings)
 end
 
 -- wrapper to call telescope to search only open files
-function telescope_grep_open()
+local function telescope_grep_open()
   telescope_grep_all({ grep_open_files=true })
 end
 
@@ -53,7 +53,15 @@ local config = {
   ui = {},
 
   -- Configure plugins
-  plugins = {},
+  plugins = {
+    ["neo-tree"] = {
+      window = {
+        mappings = {
+          ["Z"] = "expand_all_nodes",
+        },
+      },
+    },
+  },
 
   -- CMP Source Priorities
   -- modify here the priorities of default cmp sources
@@ -80,10 +88,12 @@ local config = {
       ["<CA-f>"] = { telescope_grep_all, desc = "Grep project files" },
     },
     n = {
+      -- telescope search navigation
       ["<C-f>"] = { telescope_grep, desc = "Grep current buffer" },
       ["<CA-f>"] = { telescope_grep_all, desc = "Grep project files" },
       -- tab (buffer) navigation
       ["<Tab>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer tab" },
+      ["<C-x>"] = { "<cmd>bp<bar>sp<bar>bn<bar>bd<CR>", desc = "Close Current Tab" },
       -- menu nagivation controls rework
       ["<C-Up>"]    = { "<C-w>k", desc = "Move to upper split" },
       ["<C-Down>"]  = { "<C-w>j", desc = "Move to lower split" },
