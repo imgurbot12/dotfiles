@@ -99,7 +99,7 @@ request_sudo () {
   command=$1
   info "user needs to run the following command as super user:"
   echo "\n  sudo $command \n"
-  info "afterwards running the command run this installation script again"
+  info "afterwards you may need to run this installation script again"
   exit 1
 }
 

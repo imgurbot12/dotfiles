@@ -88,12 +88,15 @@ local config = {
       ["<CA-f>"] = { telescope_grep_all, desc = "Grep project files" },
     },
     n = {
+      -- terminal shortcuts
+      ["`"] = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", desc="Vertical Term"},
       -- telescope search navigation
       ["<C-f>"] = { telescope_grep, desc = "Grep current buffer" },
-      ["<CA-f>"] = { telescope_grep_all, desc = "Grep project files" },
+      ["<CS-f>"] = { telescope_grep_all, desc = "Grep project files" },
       -- tab (buffer) navigation
       ["<Tab>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer tab" },
       ["<C-x>"] = { "<cmd>bp<bar>sp<bar>bn<bar>bd<CR>", desc = "Close Current Tab" },
+      ["<CS-Tab>"] = { "<cmd>vert sb<CR>", desc = "Move to Vertical Split" },
       -- menu nagivation controls rework
       ["<C-Up>"]    = { "<C-w>k", desc = "Move to upper split" },
       ["<C-Down>"]  = { "<C-w>j", desc = "Move to lower split" },
