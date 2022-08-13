@@ -10,6 +10,10 @@ BINARY="https://github.com/neovim/neovim/releases/latest/download/nvim.appimage"
 #: repo configuration folder
 NEOVIM="$CONFIG/neovim"
 
+#: neovim package manager plugin
+PACKER="https://github.com/wbthomason/packer.nvim"
+PACKER_INSTALL="$HOME/.local/share/nvim/site/pack/packer/start/packer.nvim"
+
 #: neovim system configuration location(s)
 NCONFIG="$HOME/.config/nvim"
 NBACKUP="$HOME/.config/nvim.backup"
@@ -37,7 +41,7 @@ install_neovim () {
 }
 
 backup_config () {
-  if [ ! -d "$NCONFIG" ]; then exit 0; fi
+  if [ ! -d "$NCONFIG" ]; then return; fi
   if [ -d "$NBACKUP" ]; then
     warn "neovim backup folder '$NBACKUP' already exists"
     confirm_yes "delete existing backup (y/n)?"
@@ -45,6 +49,15 @@ backup_config () {
   fi
   info "backing up existing neovim configurations"
   move -f "$NCONFIG" "$NBACKUP"
+}
+
+download_packer () {
+  info "cloning 'Packer' - Package Manager"
+  if [ -d "$PACKER_INSTALL" ]; then
+    info "Packer is already installed."
+    return
+  fi
+  git clone $PACKER $PACKER_INSTALL
 }
 
 download_astronvim () {
@@ -71,6 +84,7 @@ case "$1" in
     check_program nvim neovim
 
     backup_config
+    download_packer
     download_astronvim
     install_configs
     sync_neovim
