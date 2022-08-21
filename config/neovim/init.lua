@@ -54,6 +54,13 @@ local config = {
 
   -- Configure plugins
   plugins = {
+    init = {
+      { "junegunn/fzf", run = function() vim.fn['fzf#install']() end},
+      { "kevinhwang91/nvim-bqf" },
+    },
+    ["toggleterm"] = {
+      start_in_insert = false,
+    },
     ["neo-tree"] = {
       window = {
         mappings = {
@@ -88,8 +95,11 @@ local config = {
       ["<CA-f>"] = { telescope_grep_all, desc = "Grep project files" },
     },
     n = {
+      -- quit shortcut
+      ["<C-c>"] = { "<cmd>q<CR>" },
       -- terminal shortcuts
-      ["`"] = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", desc="Vertical Term"},
+      ["t1"] = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", desc="Horizontal Term"},
+      ['t2'] = { "<cmd>2ToggleTerm size=10 direction=horizontal<cr>", desc="Second Horizontal Terlm" },
       -- telescope search navigation
       ["<C-f>"] = { telescope_grep, desc = "Grep current buffer" },
       ["<CS-f>"] = { telescope_grep_all, desc = "Grep project files" },
@@ -98,6 +108,11 @@ local config = {
       ["<C-x>"] = { "<cmd>bp<bar>sp<bar>bn<bar>bd<CR>", desc = "Close Current Tab" },
       ["<CS-Tab>"] = { "<cmd>vert sb<CR>", desc = "Move to Vertical Split" },
       -- menu nagivation controls rework
+      ["!"]         = { "<cmd>1wincmd w <CR>", desc = "Move to first window" },
+      ["@"]         = { "<cmd>2wincmd w<CR>", desc = "Move to window #2" },
+      ["#"]         = { "<cmd>3wincmd w<CR>", desc = "Move to window #3" },
+      ["$"]         = { "<cmd>4wincmd w<CR>", desc = "Move to window #4" },
+      ["%"]         = { "<cmd>5wincmd w<CR>", desc = "Move to window #5" },
       ["<C-Up>"]    = { "<C-w>k", desc = "Move to upper split" },
       ["<C-Down>"]  = { "<C-w>j", desc = "Move to lower split" },
       ["<C-Left>"]  = { "<C-w>h", desc = "Move to left split"  },
@@ -120,6 +135,11 @@ local config = {
 
   -- This function is run last
   -- good place to configuring augroups/autocommands and custom filetypes
-  polish = function() end,
+  polish = function()
+    require('bqf').setup({ func_map = { 
+      filter  = "<C-f>",
+      filterr = "<C-d>",
+    }})
+  end,
 }
 return config
