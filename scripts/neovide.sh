@@ -24,8 +24,8 @@ get_neovide_version () {
 download_neovide () {
   # config
   bundle="/tmp/neovide.tar.gz"
-  target="/tmp/target"
-  binary="$target/release/neovide"
+  target="/tmp/neovide"
+  binary="$target"
   # download binary
   info "downloading neovide binary"
   if [ ! -f "$bundle" ]; then
@@ -43,13 +43,13 @@ download_neovide () {
   NEW_VERSION="$(get_neovide_version $binary)"
   if [ "$NEW_VERSION" = "$CURRENT_VERSION" ]; then
     warn "neovide already up to date. cancelling installation"
-    remove -rf "$target" 
+    remove -f "$target"
     return
   fi
   # request move of binary to /opt/
   info "moving download to final path"
   chmod +x $binary
-  request_sudo "sh -c 'mkdir -p $DESTINATION && mv -vf $binary $DESTINATION && rm -rf $target'"
+  request_sudo "sh -c 'mkdir -p $DESTINATION && mv -vf $binary $DESTINATION && rm -vf $target'"
 }
 
 wrap_neovide () {
