@@ -3,8 +3,8 @@ setup and configuration scripts for my personal workstation
 
 ### Configs
 
-- [.profile](./shell/.profile)       - simple bash profile
-- [config.fish](./shell/config.fish) - simple fish profile
+- [.profile](./config/shell/.profile)       - simple bash profile
+- [config.fish](./config/shell/config.fish) - simple fish profile
 
 ### Scripts
 - pyenv   - [PyEnv](https://github.com/pyenv/pyenv) Installer
