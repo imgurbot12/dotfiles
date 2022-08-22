@@ -5,7 +5,7 @@
 #** Functions **#
 
 check_pyenv () {
-  if pyenv root > /dev/null; then
+  if pyenv root > /dev/null 2>&1; then
     error "pyenv already installed"
   fi
 }

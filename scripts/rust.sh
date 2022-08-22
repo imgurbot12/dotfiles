@@ -69,9 +69,11 @@ case "$1" in
     ;;
   "install-utils")
     export_cargo
-    install_util rg ripgrep "$2"
-    install_util fd fd-find "$2"
-    install_util du du-dust "$2"
+    install_util rg  ripgrep "$2"
+    install_util fd  fd-find "$2"
+    install_util du  du-dust "$2"
+    install_util exa exa     "$2"
+    install_util bat bat     "$2"
     ;;
   *)
     error "invalid command. use <install/update/install-utils>"

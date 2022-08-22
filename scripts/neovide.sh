@@ -72,5 +72,6 @@ case "$1" in
     wrap_neovide
     ;;
   *)
+    echo "invalid command. use <install/...>"
     ;;
 esac
