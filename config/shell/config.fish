@@ -14,6 +14,7 @@ set -x PYENV_PATH "$HOME/.pyenv"
 #** Functions **#
 
 function add_path -a bin path -d "verbose `fish_add_path` for specific binaries"
+  if echo "$fish_user_paths" | grep -q "$path"; return 1; end
   echo "binary `$bin` adding `$path` to \$fish_user_path"
   fish_add_path "$path"
 end
@@ -38,18 +39,22 @@ function ensure_omf -a bin path -d "ensure the given omf program is installed"
   omf install "$bin"
 end
 
-function cmd_alias -a alias cmd -d "generate a unique command alias"
+function cmd_alias -a alias cmd args -d "generate a unique command alias"
   if not command -sq "$cmd"; return 1; end
-  alias "$alias"="$cmd"
+  alias "$alias"="$cmd $args"
 end
 
 #** Init **#
+
+# bultin paths
+ensure_path "<builtin>" "$HOME/bin"
+ensure_path "<builtin>" "$HOME/.local/bin"
 
 # omf => nvm / pyenv
 ensure_omf "nvm"   "$NVM_PATH"
 ensure_omf "pyenv" "$PYENV_PATH" 
 
-# paths => golang / rust (cargo) / pony / pyenv
+# path => golang / rust (cargo) / pony / pyenv
 ensure_path "go"    "$GOROOT/bin"     "$GOPATH/bin"
 ensure_path "cargo" "$CARGO_PATH/bin"
 ensure_path "ponyc" "$PONY_PATH/bin"
@@ -60,10 +65,16 @@ cmd_alias vi   "nvim"
 cmd_alias vim  "nvim"
 cmd_alias code "neovide"
 cmd_alias ls   "exa"
-cmd_alias ll   "exa -l"
-cmd_alias la   "exa -la"
+cmd_alias ll   "exa" "-l"
+cmd_alias la   "exa" "-la"
 cmd_alias cat  "bat"
 cmd_alias find "fd"
+
+# clipboard aliases
+cmd_alias pbcopy  "xsel"  "-ib"
+cmd_alias pbcopy  "xclip" "-selection c"
+cmd_alias pbpaste "xsel"  "-ob"
+cmd_alias pbpaste "xclip" "-selection c -o" 
 
 # interactive startup
 if status is-interactive

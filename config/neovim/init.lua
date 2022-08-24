@@ -57,9 +57,14 @@ local config = {
     init = {
       { "junegunn/fzf", run = function() vim.fn['fzf#install']() end},
       { "kevinhwang91/nvim-bqf" },
+      { "euclio/vim-markdown-composer", run = "cargo build --release" },
     },
     ["toggleterm"] = {
-      start_in_insert = false,
+      start_in_insert = true,
+    },
+    ["session_manager"] = {
+      sessions_dir = string.format("%s/sessions", vim.fn.stdpath('data')),
+      autosave_last_session = true,
     },
     ["neo-tree"] = {
       window = {
@@ -99,7 +104,7 @@ local config = {
       ["<C-c>"] = { "<cmd>q<CR>" },
       -- terminal shortcuts
       ["t1"] = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", desc="Horizontal Term"},
-      ['t2'] = { "<cmd>2ToggleTerm size=10 direction=horizontal<cr>", desc="Second Horizontal Terlm" },
+      ['t2'] = { "<cmd>2ToggleTerm size=10 direction=horizontal<cr>", desc="Second Horizontal Term" },
       -- telescope search navigation
       ["<C-f>"] = { telescope_grep, desc = "Grep current buffer" },
       ["<CS-f>"] = { telescope_grep_all, desc = "Grep project files" },
@@ -121,6 +126,10 @@ local config = {
       ["<S-Down>"]  = { "<cmd>resize -2<CR>",          desc = "Resize split down" },
       ["<S-Left>"]  = { "<cmd>vertical resize -2<CR>", desc = "Resize split left" },
       ["<S-Right>"] = { "<cmd>vertical resize +2<CR>", desc = "Resize split right" },
+      -- plugin commands
+      ["<A-m>"] = { "<cmd>ComposerStart<CR>", desc = "Open Markdown Preview" },
+      ["<A-s>"] = { "<cmd>SessionManager save_current_session<CR>", desc = "Save Session" },
+      ["<A-l>"] = { "<cmd>SessionManager load_session<CR>", desc = "Load Dir Session" },
     },
   },
 
@@ -136,6 +145,9 @@ local config = {
   -- This function is run last
   -- good place to configuring augroups/autocommands and custom filetypes
   polish = function()
+    -- disable markdown-preview autostart
+    vim.cmd("let g:markdown_composer_autostart = 0")
+    -- update function keymapping for better-quick-fix
     require('bqf').setup({ func_map = { 
       filter  = "<C-f>",
       filterr = "<C-d>",
