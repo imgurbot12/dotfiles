@@ -4,8 +4,8 @@ setup and configuration scripts for my personal workstation
 ### Configs
 
 - shell
-  * [.profile](./config/shell/.profile)       - simple bash profile
-  * [config.fish](./config/shell/config.fish) - simple fish profile
+  * [rc.sh](./config/shell/rc.sh)             - posix shell profile
+  * [config.fish](./config/shell/config.fish) - fish profile
 - neovim
   * [init.lua](./config/neovim/init.lua) - init configuration for AstroNvim
 

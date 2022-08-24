@@ -1,12 +1,7 @@
-# ~/.profile: executed by the command interpreter for login shells.
-# This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
-# exists.
-# see /usr/share/doc/bash/examples/startup-files for examples.
-# the files are located in the bash-doc package.
-
-# the default umask is set in /etc/profile; for setting the umask
-# for ssh logins, install and configure the libpam-umask package.
-#umask 022
+# POSIX ignostic shell rc to run on shell startup
+# source at the bottom of whatever shell you want to integrate
+# 
+# Ex: echo '. "$HOME/rc.sh" >> .bashrc'
 
 #: desc  => pretty export w/ allowed spacing
 #: usage => var $variable $value
@@ -39,8 +34,9 @@ ifc () {
 #: usage => is_missing $binary $path 
 is_missing () {
     [ $# -lt 2 ]  && return 1
-    ifc $1        || return 1
+    ifc $1        && return 1
     [ ! -d "$2" ] && return 1
+    return 0
 }
 
 #: desc  => add the given path to bash-user-path variable 
@@ -55,7 +51,7 @@ add_path () {
 #: desc  => add given paths to bash-user-path var if binary and paths exist
 #: usage => ensure_path $binary $path
 ensure_path () {
-    is_missing $@ && return 1
+    is_missing $@ || return 1
     add_path $1 $2
     for path in "${@:2}"; do
         add_path $1 $path
@@ -71,14 +67,9 @@ cmd_alias () {
 
 #** Init **#
 
-# source .bashrc if running bash & .bashrc exists
-if [ -n "$BASH_VERSION" ] && [ -f "$HOME/.bashrc" ]; then
-	. "$HOME/.bashrc"
-fi
-
 # builtin paths
-add_path "<builtin>" "$HOME/bin"
-add_path "<builtin>" "$HOME/.local/bin"
+ensure_path "<builtin>" "$HOME/bin"
+ensure_path "<builtin>" "$HOME/.local/bin"
 
 # path => golang / rust (cargo) / pony / pyenv
 ensure_path "go"    "$GOROOT/bin"     "$GOPATH/bin"
@@ -88,7 +79,9 @@ ensure_path "pyenv" "$PYENV_PATH/bin"
 
 # init => pyenv / nvm
 ifc "pyenv" && eval "$(pyenv init -)" 
-is_missing "nvm" "$NVM_PATH" || . "$NVM_PATH/nvm.sh"
+if [ -d "$NVM_PATH" ] && ! ifc "nvm"; then
+    . "$NVM_PATH/nvm.sh"
+fi
 
 # command aliases
 cmd_alias vi   "nvim"
