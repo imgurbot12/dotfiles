@@ -1,0 +1,56 @@
+
+(defpoll clock_hour   :interval "5m"  `date '+%H'`)
+(defpoll clock_minute :interval "5s"  `date '+%M'`)
+(defpoll clock_date   :interval "10h" `date '+%d/%m'`)
+
+(defpoll calendar_day   :interval "20h" `date '+%d'`)
+(defpoll calendar_month :interval "20h" `date '+%m'`)
+(defpoll calendar_year  :interval "20h" `date '+%Y'`)
+
+(defvar clock_reveal false)
+(defvar calendar_reveal false)
+
+(defwidget module_calendar []
+  (box :class       "calendar"
+       :orientation "v"
+    (box :class "calendar-interior"
+      (calendar :class "calendar-calendar"
+                :day   calendar_day
+                :month calendar_month
+                :year  calendar_year
+      )
+    )
+  )
+)
+
+(defwindow window_calendar 
+  :geometry (
+    geometry :x      "-20px"
+             :y      "7%"
+             :anchor "top right"
+             :width  "270px"
+             :height "60px"
+  )
+  (module_calendar)
+)
+
+(defwidget module_clock []
+  (eventbox :onhover     "${eww} update clock_reveal=true"
+            :onhoverlost "${eww} update clock_reveal=false"
+    (box :class        "clock"
+         :space-evenly false
+         :orientation  "h"
+         :spacing      3
+      (label :text clock_hour   :class "clock-hour")
+      (label :text ":"          :class "clock-sep")
+      (label :text clock_minute :class "clock-minute")
+      (revealer :reveal     clock_reveal
+                :transition "slideleft"
+                :duration   "350ms"
+        (button :class   "clock-date" 
+                :onclick "${scripts}/pop.sh calendar" clock_date
+        )
+      )
+    )
+  )
+)

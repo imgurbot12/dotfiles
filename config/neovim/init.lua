@@ -58,6 +58,7 @@ local config = {
       { "junegunn/fzf", run = function() vim.fn['fzf#install']() end},
       { "kevinhwang91/nvim-bqf" },
       { "euclio/vim-markdown-composer", run = "cargo build --release" },
+      { "elkowar/yuck.vim" },
     },
     ["toggleterm"] = {
       start_in_insert = true,

@@ -1,0 +1,59 @@
+
+; Global Variables
+
+(defvar eww     "$HOME/.cargo/bin/eww")
+(defvar scripts "$HOME/.config/eww/bar/scripts")
+
+; Modules
+
+(include "./bar/modules/clock/clock.yuck")
+
+; Bar Window and Primary Widgets 
+
+(defwidget widget_bar_r []
+  (box :class        "widget-bar-r"
+       :orientation  "h"
+       :space-evenly false
+       :halign       "end"
+    (module_clock)
+  )
+)
+
+(defwidget widget_bar_m []
+  (box :class        "widget-bar-m"
+       :orientation  "h"
+       :space-evenly false
+       :halign       "center"
+    "middle-bar"
+  )
+)
+
+(defwidget widget_bar_l []
+  (box :class        "widget-bar-l"
+       :orientation  "h"
+       :space-evenly false
+       :halign       "start"
+    "left-bar"
+  )
+)
+
+(defwidget widget_bar []
+  (box :class "widget_bar"
+       :orientation "h"
+    (widget_bar_l)
+    (widget_bar_m)
+    (widget_bar_r)
+  )
+)
+
+(defwindow window_bar
+    :geometry (
+      geometry :x "0%"
+               :y "9px"
+               :width "98%"
+               :height "30px"
+               :anchor "top center")
+    :stacking "fg"
+    :windowtype "dock"
+  (widget_bar)
+)

@@ -1,0 +1,30 @@
+
+$date-color:  #d7beda;  
+$clock-color: #bfc9db;
+
+.clock .clock-minute {
+  font-size: 23;
+}
+
+.clock-hour { 
+  color:       $clock-color;
+  font-weight: bold;
+  margin:      0px 5px 0px 0px;
+}
+
+.clock-sep {
+  color:     $clock-color;
+  font-size: 16px;
+  margin:    0px 4px 1px 4px;
+}
+
+.clock-minute {
+  color:  $clock-color;
+  margin: 0px 20px 0px 30px;
+}
+
+.clock-date { 
+  color:     $date-color;
+  margin:    0px 20px 0px -1px;
+  font-size: 18;
+}
