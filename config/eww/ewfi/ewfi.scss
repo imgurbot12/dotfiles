@@ -1,0 +1,47 @@
+
+/* Theme */
+
+$font:         Arial;
+$txt-color:    black;
+$row-color:    white;
+$desc-color:   $txt-color;
+$hover-color:  lightgray;
+$search-color: lightblue;
+
+/* Result Boxes */
+
+.search-bar {
+  border: none;
+  background-color: $search-color;
+}
+
+.search-result-list {
+  all: unset;
+}
+
+.search-result {
+  font-family:      $font;
+  border:           none;
+  color:            $txt-color;
+  background-color: $row-color;
+}
+
+.search-result:hover {
+  background-color: $hover-color;
+}
+
+/* Result Item */
+
+.result-image {
+  padding: 2px;
+}
+
+.result-text {
+  margin: 0px 0px 0px 20px;
+}
+
+.result-desc {
+  color:  $desc-color;
+  margin: 0px 0px 0px 20px;
+}
+

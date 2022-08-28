@@ -1,0 +1,67 @@
+
+
+(defvar ewfi_elements "")
+
+(defwidget search_bar []
+    (input :class    "search-bar"
+           :onchange "./ewfi/scripts/search.sh '{}'"
+           :timeout  "8000ms"
+    )
+)
+
+(defwidget search_result [?image app desc cmd] 
+    (eventbox :class   "search-result"
+              :onclick "./ewfi/scripts/spawn.sh '${cmd}'"
+        (box :class        "search-result-box"
+             :orientation  "h"
+             :space-evenly false
+            (image :class        "result-image"
+                   :path         "${image}"
+                   :image-width  "30"
+                   :image-height "30")
+            (box :class       "result-text"
+                 :orientation "h"
+                 :space-evenly false
+                app
+            )
+            (box :class        "result-desc"
+                 :orientation  "h"
+                 :space-evenly false
+                desc
+            )
+        )
+    )
+)
+
+(defwidget search_result_list []
+    (scroll :hscroll false
+            :vscroll true
+            :height  "450"
+        (literal :content ewfi_elements)
+    )
+)
+
+(defwidget search []
+    (box :class        "search-box"
+         :orientation  "v"
+         :space-evenly false
+        (search_bar)
+        (search_result_list)
+    )
+)
+
+(defwindow window_ewfi
+        :monitor 0
+        :geometry (
+            geometry :x      "0%"
+                     :y      "30%"
+                     :width  "40%"
+                     :height "30px"
+                     :anchor "top center")
+        :focusable  true
+        :stacking   "fg"
+        :reserve    (struts :distance "40px" :side "top")
+        :windowtype "dock"
+        :wm-ignore  false
+   (search)
+)
