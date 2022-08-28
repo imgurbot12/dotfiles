@@ -29,12 +29,11 @@ TERMINAL_CMD="alacritty -e {}"
 #: desc  => retrieve single attribute from `.desktop` file
 #: usage => get_attr "$file_contents" "Attribute"
 get_attr () {
-  suffix=""
-  if [ "$LANGUAGE" == "us" ]; then
-    suffix="|^$2=.+"
+  if [ "$LANGUAGE" != "us" ]; then
+    out=$(grep -Eo "^$2\[$LANGUAGE\]=.+" <<< "$1")
+    [ -n "$out" ] && echo "$out" | cut -d '=' -f2 | head -n 1 && return 0
   fi
-  search="^$2[$LANGUAGE]=.+$suffix"
-  grep -Eo "$search" <<< "$1" | cut -d '=' -f2 | head -n 1
+  grep -Eo "^$2=.+" <<< "$1" | cut -d '=' -f2 | head -n 1
 }
 
 #: desc  => return 0 if given string contains substring
@@ -59,7 +58,8 @@ get_icon () {
   $FIND $ICON_PATHS -iname "$name*" 2>/dev/null | head -n 1
 }
 
-#: => 
+#: desc  => retrieve command to execute application
+#: usage => get_command "$content" 
 get_command () {
   # determine base command
   exec=$(get_attr "$content" "Exec")
@@ -108,5 +108,5 @@ fi
 
 # cache_apps
 echo "EWFI: updating app cache"
-cache_apps > $CACHE_FILE
+cache_apps | sort -k 1 > $CACHE_FILE
 echo "EWFI: app cache updated"

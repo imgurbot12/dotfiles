@@ -28,11 +28,19 @@ search_cache () {
 
 ARGS="$@"
 
+# handle quit command
 if [ "$ARGS" == "$QUIT_CMD" ]; then
   echo "EWFI: executing quit command"
   $EWW close window_ewfi
   exit 0
 fi
+
+# skip any search when passed a command
+if grep -qE "^:.*" <<< "$ARGS"; then
+  echo "EWFI: skipping search on command: '$ARGS'"
+  exit 0
+fi
+
 
 s="(box :class 'search-result-list' :orientation 'v' :space-evenly false "
 m=$(search_cache "$@")
