@@ -25,12 +25,17 @@ LOAD_DIR="alacritty -e joshuto --path {}"
 #: command to load file
 LOAD_FILE="alacritty -e nvim {}"
 
+#: max files allowed to load in single search
+MAX_FILES="20"
+
 #: quit sequence to close window
 QUIT_CMD=":q"
 
 #** Functions **#
 
-#: alias for tsv-parsing search-result generating awk command
+alias expand_user="sed 's,~,$HOME,1'"
+alias rem_slash='sed "/\/$/s/\/$//"'
+alias add_slash='sed "/\/$/!s/$/\//"'
 alias fmt_result="awk -F '\t' '{print \"(search_result :image \" \$4 \" :app \" \$1 \" :desc \" \$2 \" :cmd \" \$5 \" )\"}'"
 
 #: desc  => simplified fmt_result for formatting file entries
@@ -42,7 +47,7 @@ fmt_file () {
 #: desc  => list icon to use for specified file 
 #: usage => ls $path | file_icon $path
 file_icon () {
-  b=`sed '/\/$/!s/$/\//' <<< "${1:-''}"`
+  b=`add_slash <<< "${1:-''}"`
   for p in `</dev/stdin`; do
     f="$b$p"
     if [ ! -d "$f" ]; then
@@ -56,7 +61,14 @@ file_icon () {
 #: desc  => search filesystem files at the given path
 #: usage => search_files $search
 search_files () {
-  $LIST_DIR "$1" | file_icon "$1"
+  if [ ! -d "$1" ]; then
+    d=$(dirname $1)
+    [ ! -d "$d" ] && echo "EWFI: skipping search on invalid dir: $d" && return 0
+    s=$(basename $1)
+    $LIST_DIR "$d" | grep -i "^$s" | head -n $MAX_FILES | file_icon "$d"
+    return 0
+  fi
+  $LIST_DIR "$1" | head -n $MAX_FILES | file_icon "$1"
 }
 
 #: desc  => search desktop apps for the given text
@@ -91,8 +103,7 @@ S="(box :class 'search-result-list' :orientation 'v' :space-evenly false "
 
 # process file searches
 if grep -qE "^[~\./]" <<< "$ARGS"; then
-  dir=`echo $@ | sed "s,~,$HOME,1"`
-  [ ! -d "$dir" ] && echo "skipping invalid dir '$dir'" && return 0
+  dir=`echo $@ | expand_user`
   C=$(search_files "$dir")
 else
   C=$(search_app_cache "$@")
