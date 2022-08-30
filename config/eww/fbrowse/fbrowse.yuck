@@ -1,0 +1,121 @@
+
+(defvar fbrowse_path "") ;; temp var?
+
+(defvar fbrowse_files "")
+(defvar fbrowse_bookmarks "")
+
+;; Layout Modules
+
+(defwidget fbrowse_file [?name image]
+  (box :orientation  "h"
+       :space-evenly false
+    (image :class        "file-icon"
+           :path         image
+           :image-width  25
+           :image-height 25
+    )
+    (box :class       "bookmark-name"
+         :orientation "h"
+      name
+    )
+  )
+)
+
+(defwidget fbrowse_item [?name path image]
+  (eventbox :class        "file"
+            :onclick      "./fbrowse/scripts/files.sh ur ${path}"
+            :timeout      "5s"
+    (fbrowse_file :name name :image image)
+  )
+)
+
+(defwidget fbrowse_bookmark [?name path] 
+  (eventbox :class        "bookmark"
+            :onclick      "./fbrowse/scripts/files.sh ur ${path}"
+            :timeout      "5s"
+    (fbrowse_file :name  name
+                  :image "/home/andrew/dotfiles/config/eww/ewfi/img/dir-icon.png"
+    )
+  )
+)
+
+;; Layout Components
+
+(defwidget fbrowse_navbar_arrows []
+  (box :class        "navbar-arrows"
+       :orientation  "h"
+       :space-evenly false
+    (eventbox :class   "arrow-left"
+              :onclick "./fbrowse/scripts/back.sh"
+      "<-"
+    )
+    (eventbox :class   "arrow-right"
+              :onclick "echo 'arrow-right'"
+      "->"
+    )
+  )
+)
+
+(defwidget fbrowse_navbar []
+  (centerbox :class       "navbar"
+             :orientation "h"
+    (box :class "navbar-l" 
+         :orientation "h"
+      (fbrowse_navbar_arrows)
+    )
+    (box :class        "navbar-m" 
+         :orientation  "h"
+         :space-evenly false
+      (box :class "location" "/home/andrew")
+    )
+    (box :class "navbar-r" 
+         :orientation "h" 
+      (eventbox :class "options"  "::")
+    )
+  )
+)
+
+(defwidget fbrowse_inner_layout []
+  (box :class       "fbrowse-inner"
+       :orientation "h"
+       :space-evenly false
+       :hexpand      true
+       :vexpand      true
+       :width        600
+       :height       400
+    (box :class       "bookmarks" 
+         :orientation "v"
+         :width       150
+      (literal :content fbrowse_bookmarks)
+    )
+    (box :class       "files" 
+         :orientation "v"
+         :width       450
+      (literal :content fbrowse_files)
+    )
+  )
+)
+
+(defwidget fbrowse_outer_layout []
+  (box :class        "fbrowse"
+       :orientation  "v"
+       :space-evenly false
+    (fbrowse_navbar)
+    (fbrowse_inner_layout)
+  )
+)
+
+(defwindow window_fbrowse
+    :monitor 0
+    :geometry (
+      geometry :x      "0%"
+               :y      "30%"
+               :width  "5%"
+               :height "5%"
+               :anchor "top center")
+    :focusable  true
+    :stacking   "fg"
+    :windowtype "normal"
+    :wm-ignore  false
+  (fbrowse_outer_layout)
+)

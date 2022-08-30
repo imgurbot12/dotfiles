@@ -1,2 +1,3 @@
 (include "./bar/bar.yuck")
 (include "./ewfi/ewfi.yuck")
+(include "./fbrowse/fbrowse.yuck")
