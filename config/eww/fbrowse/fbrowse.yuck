@@ -23,7 +23,7 @@
 
 (defwidget fbrowse_item [?name path image]
   (eventbox :class        "file"
-            :onclick      "./fbrowse/scripts/files.sh ur ${path}"
+            :onclick      "./fbrowse/scripts/bg.sh files.sh ur ${path}"
             :timeout      "5s"
     (fbrowse_file :name name :image image)
   )
@@ -88,10 +88,13 @@
          :width       150
       (literal :content fbrowse_bookmarks)
     )
-    (box :class       "files" 
-         :orientation "v"
-         :width       450
-      (literal :content fbrowse_files)
+    (scroll :hexpand true
+            :vexpand true
+      (eventbox :class       "files" 
+                :width       450
+                :onscroll    "echo 'files scroll {}'"
+        (literal :content fbrowse_files)
+      )
     )
   )
 )

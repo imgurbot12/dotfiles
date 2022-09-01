@@ -4,6 +4,8 @@
 # List/Render directory contents
 # 
 
+. "$(dirname $0)/icon.sh" ":l"
+
 #** Variables **#
 
 #: eww binary
@@ -23,11 +25,18 @@ ARGS_HIDDEN="$ARGS -not -path '*/.*'"
 #: functionify iconize script
 iconize="$(dirname $0)/icon.sh"
 
+#: usage => <cmd> | fmt_file
+fmt_file () {
+  for f in `</dev/stdin`; do
+    fileinfo $f
+  done
+}
+
 #: usage => list $dir
 list () {
   [ ! -d "$1" ] && echo "BROWSE: list invalid directory: '$1'" && return 1
   [ ! -n "$S_HIDDEN" ] && a=$ARGS_HIDDEN || a=$ARGS
-  eval "$LIST_DIR '$1' $a | tail -n +2" | xargs -n1 $iconize
+  eval "$LIST_DIR '$1' $a | tail -n +2 " | fmt_file
 }
 
 #: usage => list_results $dir

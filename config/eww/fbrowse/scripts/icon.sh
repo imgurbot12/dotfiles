@@ -19,7 +19,12 @@ iconize () {
   esac
 }
 
+#: usage => fileinfo $path
+fileinfo () {
+  echo "'$(iconize $1)' '$1' '$(basename $1)'"
+}
+
 #** Init **#
 
-echo "'$(iconize $1)' '$1' '$(basename $1)'"
-
+[ "$1" = ":l" ] && return 0
+fileinfo "$1"
