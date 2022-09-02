@@ -1,7 +1,11 @@
 
 (defvar fbrowse_path "") ;; temp var?
 
-(defvar fbrowse_files "")
+(defvar fbrowse_files_1 "")
+(defvar fbrowse_files_2 "")
+(defvar fbrowse_files_3 "")
+(defvar fbrowse_files_4 "")
+(defvar fbrowse_files_5 "")
 (defvar fbrowse_bookmarks "")
 
 ;; Layout Modules
@@ -90,10 +94,15 @@
     )
     (scroll :hexpand true
             :vexpand true
-      (eventbox :class       "files" 
-                :width       450
-                :onscroll    "echo 'files scroll {}'"
-        (literal :content fbrowse_files)
+      (box :class       "files" 
+           :width       450
+           :orientation "v"
+           :space-evenly false
+        (literal :content fbrowse_files_1)
+        (literal :content fbrowse_files_2)
+        (literal :content fbrowse_files_3)
+        (literal :content fbrowse_files_4)
+        (literal :content fbrowse_files_5)
       )
     )
   )
