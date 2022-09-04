@@ -1,4 +1,18 @@
 
+---- Variables
+
+local WindowUp      = "<cmd>wincmd k<CR>"
+local WindowDown    = "<cmd>wincmd j<CR>"
+local WindowLeft    = "<cmd>wincmd h<CR>"
+local WindowRight   = "<cmd>wincmd l<CR>"
+
+local NextBuffer  = "<cmd>BufferLineCycleNext<cr>"
+local CloseBuffer = "<cmd>bp<bar>sp<bar>bn<bar>bd<CR>"
+
+local ToggleTermNum = "<cmd>exec v:count1 . 'ToggleTerm size=10 direction=horizontal'<CR>"
+
+---- Functions
+
 -- wrapper to call telescope grep on active buffer
 local function telescope_grep()
   require("telescope.builtin").current_buffer_fuzzy_find()
@@ -14,7 +28,8 @@ local function telescope_grep_open()
   telescope_grep_all({ grep_open_files=true })
 end
 
--- configuration
+---- Configuration
+
 local config = {
 
   -- Configure AstroNvim updates
@@ -66,6 +81,10 @@ local config = {
       sessions_dir = string.format("%s/sessions", vim.fn.stdpath('data')),
       autosave_last_session = true,
     },
+    ["which-key"] = {
+      silent = true,
+      noremap = true,
+    },
     ["neo-tree"] = {
       window = {
         mappings = {
@@ -96,32 +115,49 @@ local config = {
   mappings = {
     -- first key is the mode
     i = {
-      ["<C-f>"] = { telescope_grep, desc = "Grep current buffer" },
+      -- code navigation
+      ["<A-Left>"]  = { "<Home>", desc = "Jump to Start of Line" },
+      ["<A-Right>"] = { "<End>",  desc = "Jump to End of Line" },
+      -- find utilities
+      ["<C-f>"]  = { telescope_grep,     desc = "Grep current buffer" },
       ["<CA-f>"] = { telescope_grep_all, desc = "Grep project files" },
+    },
+    t = {
+      -- improved terminal controls
+      ["<C-l>"] = { '<C-l>', desc = "Clear Terminal Screen" },
+      -- improved terminal window navigation
+      ["<Esc>"]     = { 'exit\n',      desc = "Close Terminal" },
+      ["<C-t>"]     = { ToggleTermNum, desc = "Spawn Additional Terminal(s)" },
+      ["<C-Up>"]    = { WindowUp,      desc = "Move to upper window" },
+      ["<C-Down>"]  = { WindowDown,    desc = "Move to lower window" },
+      ["<C-Left>"]  = { WindowLeft,    desc = "Move to left window"  },
+      ["<C-Right>"] = { WindowRight,   desc = "Move to right window" },
     },
     n = {
       -- quit shortcut
       ["<C-c>"] = { "<cmd>q<CR>" },
       -- terminal shortcuts
-      ["t1"] = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", desc="Horizontal Term"},
-      ['t2'] = { "<cmd>2ToggleTerm size=10 direction=horizontal<cr>", desc="Second Horizontal Term" },
+      ["t"] = { ToggleTermNum, desc = "Toggle Termimal By Number" },
       -- telescope search navigation
-      ["<C-f>"] = { telescope_grep, desc = "Grep current buffer" },
+      ["<C-f>"]  = { telescope_grep,     desc = "Grep current buffer" },
       ["<CS-f>"] = { telescope_grep_all, desc = "Grep project files" },
+      -- code navigation
+      ["<A-Left>"]  = { "<Home>", desc = "Jump to Start of Line" },
+      ["<A-Right>"] = { "<End>",  desc = "Jump to End of Line" },
       -- tab (buffer) navigation
-      ["<Tab>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Next buffer tab" },
-      ["<C-x>"] = { "<cmd>bp<bar>sp<bar>bn<bar>bd<CR>", desc = "Close Current Tab" },
-      ["<CS-Tab>"] = { "<cmd>vert sb<CR>", desc = "Move to Vertical Split" },
+      ["<Tab>"]   = { NextBuffer,         desc = "Focus Next Buffer" },
+      ["<C-x>"]   = { CloseBuffer,        desc = "Close Current Tab" },
+      ["<S-Tab>"] = { "<cmd>vert sb<CR>", desc = "Move to Vertical Split" },
       -- menu nagivation controls rework
       ["!"]         = { "<cmd>1wincmd w <CR>", desc = "Move to first window" },
       ["@"]         = { "<cmd>2wincmd w<CR>", desc = "Move to window #2" },
       ["#"]         = { "<cmd>3wincmd w<CR>", desc = "Move to window #3" },
       ["$"]         = { "<cmd>4wincmd w<CR>", desc = "Move to window #4" },
       ["%"]         = { "<cmd>5wincmd w<CR>", desc = "Move to window #5" },
-      ["<C-Up>"]    = { "<C-w>k", desc = "Move to upper split" },
-      ["<C-Down>"]  = { "<C-w>j", desc = "Move to lower split" },
-      ["<C-Left>"]  = { "<C-w>h", desc = "Move to left split"  },
-      ["<C-Right>"] = { "<C-w>l", desc = "Move to right split" },
+      ["<C-Up>"]    = { WindowUp,    desc = "Move to upper split" },
+      ["<C-Down>"]  = { WindowDown,  desc = "Move to lower split" },
+      ["<C-Left>"]  = { WindowLeft,  desc = "Move to left split"  },
+      ["<C-Right>"] = { WindowRight, desc = "Move to right split" },
       ["<S-Up>"]    = { "<cmd>resize +2<CR>",          desc = "Resize split up" },
       ["<S-Down>"]  = { "<cmd>resize -2<CR>",          desc = "Resize split down" },
       ["<S-Left>"]  = { "<cmd>vertical resize -2<CR>", desc = "Resize split left" },
