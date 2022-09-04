@@ -116,7 +116,7 @@ local config = {
     -- first key is the mode
     i = {
       -- code navigation
-      ["<A-Left>"]  = { "<Home>", desc = "Jump to Start of Line" },
+      ["<A-Left>"]  = { "<C-o>^", desc = "Jump to Start of Line" },
       ["<A-Right>"] = { "<End>",  desc = "Jump to End of Line" },
       -- find utilities
       ["<C-f>"]  = { telescope_grep,     desc = "Grep current buffer" },
@@ -142,7 +142,7 @@ local config = {
       ["<C-f>"]  = { telescope_grep,     desc = "Grep current buffer" },
       ["<CS-f>"] = { telescope_grep_all, desc = "Grep project files" },
       -- code navigation
-      ["<A-Left>"]  = { "<Home>", desc = "Jump to Start of Line" },
+      ["<A-Left>"]  = { "^", desc = "Jump to Start of Line" },
       ["<A-Right>"] = { "<End>",  desc = "Jump to End of Line" },
       -- tab (buffer) navigation
       ["<Tab>"]   = { NextBuffer,         desc = "Focus Next Buffer" },
