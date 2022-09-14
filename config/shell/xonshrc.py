@@ -46,7 +46,7 @@ def left_prompt() -> str:
     return '{env_name}$ '
 
 def right_prompt() -> str:
-    cwd = shorten_path(__xonsh__.shell.shell.precwd or $(pwd), 15)
+    cwd = shorten_path($PWD or $(pwd), 15)
     return '{curr_branch: {#555}({}) }{BOLD_BLUE}[{YELLOW}' + cwd + '{BOLD_BLUE}]{RESET}'
 
 def add_path(path: str):
