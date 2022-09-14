@@ -8,7 +8,7 @@ set -e
 #** Variables **#
 
 DIR=$(dirname $0)
-CONFIG="$DIR/../config"
+CONFIG=`realpath "$DIR/../config"`
 
 #** Functions **#
 
@@ -18,7 +18,7 @@ _log () {
   prefix=$1
   shift
   message=$@
-  echo "[$prefix] $message"
+  echo -e "[$prefix] $message"
 }
 
 info () {
@@ -97,9 +97,9 @@ confirm_yes () {
 
 request_sudo () {
   command=$1
-  info "user needs to run the following command as super user:"
-  echo "\n  sudo $command \n"
-  info "afterwards you may need to run this installation script again"
+  info    "user needs to run the following command as super user:"
+  echo -e "\n  sudo $command \n"
+  info    "afterwards you may need to run this installation script again"
   exit 1
 }
 
