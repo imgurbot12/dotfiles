@@ -44,7 +44,7 @@ backup_config () {
   if [ ! -d "$NCONFIG" ]; then return; fi
   if [ -d "$NBACKUP" ]; then
     warn "neovim backup folder '$NBACKUP' already exists"
-    confirm_yes "delete existing backup (y/n)?"
+    confirm_yes "delete existing backup (y/n)?" || exit 1
     remove -rf "$NBACKUP"
   fi
   info "backing up existing neovim configurations"

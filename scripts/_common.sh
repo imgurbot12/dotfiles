@@ -74,6 +74,15 @@ makedir () {
 
 ### Additional Utilities
 
+#: desc  => return 0 if substring exists in other string
+#: usage => substr $substr $str
+substr () {
+  echo $str | grep -q $substr && return 0
+  return 1
+}
+
+#: desc  => raise error if the given program cannot be found
+#: usage => check_program $binary $package_name
 check_program () {
   program=$1
   package=${2:-"$program"}
@@ -83,18 +92,22 @@ check_program () {
   debug "package '$package' is installed"
 }
 
+#: desc  => confirm 'y/Y' or return 1
+#: usage => confirm_yes $prompt
 confirm_yes () {
   prompt=$1
   while true; do
     read -p "  $prompt " yn
     case $yn in
-        [Yy]* ) echo ""; break;;
-        [Nn]* ) exit 1;;
+        [Yy]* ) echo ""; return 0;;
+        [Nn]* ) return 1;;
         * ) echo "Please answer yes or no.";;
     esac
   done
 }
 
+#: desc  => request the user to run the given command as sudo
+#: usage => request_sudo $command
 request_sudo () {
   command=$1
   info    "user needs to run the following command as super user:"
