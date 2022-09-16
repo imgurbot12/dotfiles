@@ -16,6 +16,9 @@ __all__ = [
 
 #** Variables **#
 
+#: configured xonsh prompt
+PROMPT = 'aight'
+
 USER = getuser()
 HOME = expanduser('~').rstrip(sep)
 
@@ -57,14 +60,14 @@ def statuscode() -> int:
     """
     retrieve status code of last completed command
     """
-    history = __xonsh__.history.rtns
-    history[-1] if len(history) > 0 else 0
+    history = xonsh.history.rtns
+    return history[-1] if len(history) > 0 else 0
 
 def addpath(path: str, first: bool = False):
     """
     add the given path to xonsh configured PATH env variable
     """
-    PATH = __xonsh__.env['PATH']
+    PATH = xonsh.env['PATH']
     if isdir(path) and exists(path) and path not in PATH:
         PATH.add(path, first=first, replace=True)
 
@@ -73,7 +76,7 @@ def ensurepaths(bin: str, paths: dict):
     condionally add the given paths if they exist and the command cannot be found
     """
     if not which(bin):
-        env = __xonsh__.env
+        env = xonsh.env
         for name, path in paths.items():
             path = env.setdefault(name, path)
             addpath(f'{path}/bin')
@@ -83,19 +86,28 @@ def cmdalias(alias: str, cmd: str, *args: str):
     alias command if command is accessable to shell
     """
     if which(cmd):
-        __xonsh__.aliases[alias] = [cmd, *args]
+        xonsh.aliases[alias] = [cmd, *args]
 
 #** Init **#
 
+try:
+    xonsh = __xonsh__
+except NameError:
+    xonsh = None
+
 # complete xonsh init if available
-if '__xonsh__' in globals():
-    
+if xonsh is not None:
+    # import and configure prompts
+    import prompts
+
+    prompts.load_prompt(PROMPT)
+
     # ensure paths are added to xonsh
     addpath(f'{HOME}/bin')
     addpath(f'{HOME}/.local/bin')
     
     # add paths for various languages
-    ensurepaths('go',    {'GOROOT': GOROOT, 'GOPATH': 'GOPATH'})
+    ensurepaths('go',    {'GOROOT': GOROOT, 'GOPATH': GOPATH})
     ensurepaths('cargo', {'CARGO_ROOT', CARGO_ROOT})
     ensurepaths('pyenv', {'PYENV_ROOT', PYENV_ROOT})
 

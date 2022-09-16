@@ -1,0 +1,31 @@
+# Aight Theme - Reimplemented and stolen from Fish theme
+
+# Left Prompt Format
+format = """($python )[\\$](white) """
+
+# Right Prompt Format
+right_format = """\n[(\\($git_branch$git_status\\))](fg:#555555) $directory"""
+
+# Wait 10 milliseconds for starship to check files under the current directory.
+scan_timeout = 10
+
+# Disable the blank line at the start of the prompt
+add_newline = false
+
+[python]
+format = "(\\($virtualenv\\))"
+
+[directory]
+format            = "[\\[](blue)[$path]($style)[\\]](blue)"
+truncation_length = 3
+truncate_to_repo  = true
+style             = "yellow"
+
+[git_branch]
+format ="[$branch(:$remote_branch)]($style)"
+style  = "fg:#555555"
+
+[git_status]
+format   = '[$modified]($style)'
+style    = "fg:#555555"
+modified = "*"
