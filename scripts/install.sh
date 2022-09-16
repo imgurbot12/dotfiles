@@ -45,7 +45,24 @@ PYENV="https://pyenv.run"
 #: latest golang packaged release
 GORELEASE="https://go.dev/dl/go1.19.1.linux-amd64.tar.gz"
 
+## Starship variables
+
+#: fonts directory
+FONTSDIR="$HOME/.local/share/fonts"
+
+#: nerdfonts used in starship
+NERDFONTS="
+https://github.com/ryanoasis/nerd-fonts/releases/download/v2.2.2/FiraCode.zip
+"
+
 #** Functions **#
+
+_source_cargo () {
+  if [ -f "$CARGOENV" ]; then
+    log_debug "sourcing cargo environment"
+    . "$CARGOENV"
+  fi
+}
 
 install_nvim () {
   # download and install neovim otherwise
@@ -117,10 +134,7 @@ install_neovide () {
 
 install_rust () {
   # source cargo env if available
-  if [ -f "$CARGOENV" ]; then
-    log_debug "sourcing cargo environment"
-    . "$CARGOENV"
-  fi
+  _source_cargo
   # skip if rust is already installed
   if has_binary rustup; then
     log_info "rust-lang is already installed. updating installation..."
@@ -133,10 +147,7 @@ install_rust () {
 
 install_rust_utils () {
   # source cargo env if available
-  if [ -f "$CARGOENV" ]; then
-    log_debug "sourcing cargo environment"
-    . "$CARGOENV"
-  fi
+  _source_cargo
   # attempt to install various rust utilities
   ensure_program cargo rust
   install () {
@@ -175,6 +186,36 @@ install_golang () {
   file_remove "-f $target"
 }
 
+install_starship () {
+  # source cargo and ensure rust is installed
+  _source_cargo
+  ensure_program cargo rust
+  # install starship theming utility
+  copy_home ".local/bin/startheme.sh"
+  copy_home ".config/starship/."
+  chmod +x "$HOME/.local/bin/startheme.sh"
+  # install nerdfonts
+  if [ ! -f "$FONTSDIR/readme.md" ]; then
+    ensure_program unzip
+    file_mkdir "-p $FONTSDIR"
+    # install fonts into fonts-directory
+    dest="/tmp/nerdfonts.zip"
+    log_info "installing nerd fonts to '$FONTSDIR'"
+    for font in $NERDFONTS; do
+      # download via curl
+      log_info "- installing font: '$font'"
+      curl -L "$font" -o $dest
+      # unzip contents into fontsdir
+      unzip -qod $FONTSDIR $dest
+      file_remove $dest
+    done
+  fi
+  # install starship
+  has_binary "starship" && log_info "starship is already installed" && return 0
+  log_info "installing starship"
+  cargo install starship
+}
+
 #** Init **#
 
 case "$1" in
@@ -184,6 +225,7 @@ case "$1" in
   "rust-utils") install_rust_utils "$2" ;;
   "pyenv")      install_pyenv           ;;
   "golang")     install_golang          ;;
+  "starship")   install_starship        ;;
   *)
     log_error "invalid command. try <nvim/neovide/rust/pyenv/...>"
     exit 1
