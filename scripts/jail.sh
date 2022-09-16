@@ -10,6 +10,7 @@ ISLIB=1 . "$(dirname $0)/push.sh"
 
 #: desc => patch existing discord instance to use firejail config
 patch_discord () {
+  ensure_program discord
   # push firejail config to user profile
   log_info  "installing discord profile to $USER's config"
   copy_home ".config/firejail/discord.profile"
