@@ -191,9 +191,7 @@ install_starship () {
   _source_cargo
   ensure_program cargo rust
   # install starship theming utility
-  copy_home ".local/bin/startheme.sh"
-  copy_home ".config/starship/."
-  chmod +x "$HOME/.local/bin/startheme.sh"
+  push_starship
   # install nerdfonts
   if [ ! -f "$FONTSDIR/readme.md" ]; then
     ensure_program unzip

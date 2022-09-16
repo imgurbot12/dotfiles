@@ -61,6 +61,13 @@ push_xonsh () {
   copy_home ".xonshrc"
 }
 
+#: desc => push all configs related to starship
+push_starship () {
+  copy_home ".local/bin/startheme.sh"
+  copy_home ".config/starship/."
+  chmod +x "$HOME/.local/bin/startheme.sh"
+}
+
 #: desc => push all configs for posix related shells
 push_posix () {
   copy_home ".shellrc"
@@ -93,6 +100,7 @@ case "$1" in
   "posixcfg")     push_posix        ;;
   "xonshcfg")     push_xonsh        ;;
   "fishcfg")      push_fish         ;;
+  "starshipcfg")  push_starship     ;;
   "firejail")     push_firejail     ;;
   "desktop_apps") push_desktop_apps ;;
   *)
