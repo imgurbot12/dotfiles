@@ -126,7 +126,6 @@ local config = {
       -- improved terminal controls
       ["<C-l>"] = { '<C-l>', desc = "Clear Terminal Screen" },
       -- improved terminal window navigation
-      ["<Esc>"]     = { 'exit\n',      desc = "Close Terminal" },
       ["<C-t>"]     = { ToggleTermNum, desc = "Spawn Additional Terminal(s)" },
       ["<C-Up>"]    = { WindowUp,      desc = "Move to upper window" },
       ["<C-Down>"]  = { WindowDown,    desc = "Move to lower window" },
@@ -184,7 +183,7 @@ local config = {
     -- disable markdown-preview autostart
     vim.cmd("let g:markdown_composer_autostart = 0")
     -- update function keymapping for better-quick-fix
-    require('bqf').setup({ func_map = { 
+    require('bqf').setup({ func_map = {
       filter  = "<C-f>",
       filterr = "<C-d>",
     }})

@@ -1,11 +1,13 @@
 #
-# Common variables / utilities used between scripts
+# Common libraries for installation scripts
 #
 
-# configure scripts to exit on any command errors unless discarded
+# confgure scripts to exit on any command errors unless explicitly handled
 set -e
 
 #** Variables **#
+
+LOGLEVEL=${LOGLEVEL:-1}
 
 DIR=$(dirname $0)
 CONFIG=`realpath "$DIR/../config"`
@@ -14,86 +16,83 @@ CONFIG=`realpath "$DIR/../config"`
 
 ### Logging
 
-_log () {
-  prefix=$1
-  shift
-  message=$@
-  echo -e "[$prefix] $message"
+log_write () {
+  printf "[$1] $2\n"
 }
 
-info () {
-  _log "I" "$@"
+log_info () {
+  [ $LOGLEVEL -gt 1 ] && return 0
+  log_write "INFO" "$@"
 }
 
-warn () {
-  _log "W" "$@"
+log_warn () {
+  [ $LOGLEVEL -gt 2 ] && return 0
+  log_write "WARN" "$@"
 }
 
-error () {
-  _log "E" "$@"
-  exit 1
+log_error () {
+  [ $LOGLEVEL -gt 3 ] && return 0
+  log_write "ERROR" "$@"
 }
 
-debug () {
-  if [ ! -z "$DEBUG" ]; then
-    _log "D" " $@"
-  fi
+log_debug () {
+  [ $LOGLEVEL -gt 0 ] && return 0
+  log_write "DEBUG" "$@"
 }
 
 ### Smart File Operations
 
-_fileop () {
-  cmd="$1"
-  shift
-  if [ ! -z "$DEBUG" ]; then
-    cmd="$cmd -v"
-    debug "fileop: $cmd $@"
-  fi
-  eval "$cmd $@"
+file_do () {
+  [ ! -n "$SUDO" ]    && cmd="$1"  || cmd="sudo $1"
+  [ $LOGLEVEL -gt 0 ] && args="$2" || args="-v $2"
+  log_debug "file-op: \`$cmd $args\`"
+  eval "$cmd $args"
 }
 
-copy () {
-  _fileop cp "$@"
+file_copy () {
+  file_do "cp" "$@"
 }
 
-move () {
-  _fileop mv "$@"
+file_move () {
+  file_do "mv" "$@"
 }
 
-remove () {
-  _fileop rm "$@"
+file_remove () {
+  file_do "rm" "$@"
 }
 
-makedir () {
-  for arg in $@; do :; done
-  if [ -d "$arg" ]; then
-    debug "directory '$i' already exists"
-  fi
-  _fileop mkdir "$@"
+file_mkdir () {
+  file_do "mkdir" "$@" 
 }
 
 ### Additional Utilities
 
-#: desc  => return 0 if substring exists in other string
-#: usage => substr $substr $str
-substr () {
-  echo $str | grep -q $substr && return 0
+#: desc  => return 0 if binary is found
+#: usage => $binary
+has_binary () {
+  which $1 >/dev/null 2>&1 && return 0
   return 1
 }
 
-#: desc  => raise error if the given program cannot be found
-#: usage => check_program $binary $package_name
-check_program () {
-  program=$1
-  package=${2:-"$program"}
-  if ! $program --help >/dev/null 2>&1; then
-    error "program: '$package' was not found and must be installed"
+#: desc  => raise error and exit if the requested binary is missing
+#: usage => $binary $package-name
+ensure_program () {
+  pkg=${2:-"$1"}
+  if ! has_binary $1; then
+    log_error "program: '$pkg' was not found and must be installed"
+    exit 1
   fi
-  debug "package '$package' is installed"
+  log_debug "package '$pkg' is installed"
+}
+
+#: desc  => get version of requested binary if it exists
+#: usage => $binary
+get_version () {
+  $1 --version | grep -oE '[0-9]\.([0-9]\.?)+' || true
 }
 
 #: desc  => confirm 'y/Y' or return 1
-#: usage => confirm_yes $prompt
+#: usage => $prompt
 confirm_yes () {
   prompt=$1
   while true; do
@@ -106,24 +105,15 @@ confirm_yes () {
   done
 }
 
-#: desc  => request the user to run the given command as sudo
-#: usage => request_sudo $command
-request_sudo () {
-  command=$1
-  info    "user needs to run the following command as super user:"
-  echo -e "\n  sudo $command \n"
-  info    "afterwards you may need to run this installation script again"
-  exit 1
-}
-
 #** Init **#
 
-# ensure program is NOT running as root
-if whoami | grep -E '^root$' >/dev/null; then
-  error "script SHOULD NOT be run as root"
+if whoami | grep -qE '^root$' && ! echo "$@" | grep -q '\-\-confirm'; then
+  log_warn "script is blocked to run as root by default"
+  log_warn "include '--confirm' in arguments to override block"
   exit 1
 fi
 
-info "checking for required binaries"
-check_program git
-check_program curl
+log_info "checking for required programs"
+ensure_program git
+ensure_program curl
+

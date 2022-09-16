@@ -1,0 +1,6 @@
+
+## Bootstrap XonSH .config
+import os, sys
+sys.path.insert(0, os.path.expanduser('~/.config/xonsh'))
+from init import *
+del os, sys
