@@ -11,15 +11,13 @@ $nodejs\
 $docker_context\
 $git_branch\
 $git_status\
+$cmd_duration\
 $time
 $character
 """
 
-# Wait 10 milliseconds for starship to check files under the current directory.
 scan_timeout = 10
-
-# Disable the blank line at the start of the prompt
-add_newline = false
+add_newline  = false
 
 [fill]
 symbol = ' '
@@ -68,12 +66,12 @@ format = '[ $symbol ($version) ]($style)'
 
 [rust]
 symbol = ''
-style = 'bg:#86BBD8 fg:#DCE7E8'
+style  = 'bg:#86BBD8 fg:#DCE7E8'
 format = '[ $symbol ($version) ]($style)'
 
 [golang]
 symbol = ''
-style = 'bg:#86BBD8 fg:#DCE7E8'
+style  = 'bg:#86BBD8 fg:#DCE7E8'
 format = '[ $symbol ($version) ]($style)'
 
 [python]
@@ -85,6 +83,12 @@ format = '[ $symbol ($version) ]($style)'
 symbol = ''
 style  = 'bg:#86BBD8 fg:#DCE7E8'
 format = '[ $symbol ($version) ]($style)'
+
+[cmd_duration]
+format             = '[ time=$duration ]($style)'
+min_time           = 5_000
+show_notifications = true
+style              = 'bg:white fg:black'
 
 [time]
 format      = '[ $time ]($style)'

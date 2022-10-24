@@ -1,13 +1,21 @@
+# Custom Prompt Theme inspried by `BoxFish` OMF Theme
 
-format = '$directory($git_branch$git_status) '
+format       = '$character$directory($git_branch$git_status) '
+right_format = '$c$rust$golang$python$nodejs$cmd_duration'
 
-right_format = '$c$rust$golang$python$nodejs'
-
-# Wait 10 milliseconds for starship to check files under the current directory.
 scan_timeout = 10
+add_newline  = false
 
-# Disable the blank line at the start of the prompt
-add_newline = false
+[cmd_duration]
+format             = '[ time=$duration ]($style)'
+min_time           = 5_000
+show_notifications = true
+style              = 'bg:white fg:black'
+
+[character]
+format         = '$symbol'
+success_symbol = ''
+error_symbol   = '[ ! ](bg:red fg:#DCE7E8)'
 
 [directory]
 format            = '[ $path ]($style)'
@@ -16,13 +24,12 @@ truncate_to_repo  = true
 style             = 'bg:blue fg:white'
 
 [git_branch]
-format ='[ $branch(:$remote_branch)]($style)'
+format ='[ $branch(:$remote_branch) ]($style)'
 style  = 'bg:yellow fg:black'
 
 [git_status]
-format   = '[$modified ]($style)'
-style    = 'bg:yellow fg:black'
-modified = '*'
+format = '([$all_status$ahead_behind ]($style))'
+style  = 'bg:yellow fg:black'
 
 [docker_context]
 symbol = ''

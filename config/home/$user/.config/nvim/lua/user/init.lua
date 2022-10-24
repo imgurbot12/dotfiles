@@ -7,6 +7,7 @@ local WindowLeft    = "<cmd>wincmd h<CR>"
 local WindowRight   = "<cmd>wincmd l<CR>"
 
 local NextBuffer  = "<cmd>BufferLineCycleNext<cr>"
+local PrevBuffer  = "<cmd>BufferLineCyclePrev<cr>"
 local CloseBuffer = "<cmd>bp<bar>sp<bar>bn<bar>bd<CR>"
 
 local ToggleTermNum = "<cmd>exec v:count1 . 'ToggleTerm size=10 direction=horizontal'<CR>"
@@ -144,9 +145,10 @@ local config = {
       ["<A-Left>"]  = { "^", desc = "Jump to Start of Line" },
       ["<A-Right>"] = { "<End>",  desc = "Jump to End of Line" },
       -- tab (buffer) navigation
-      ["<Tab>"]   = { NextBuffer,         desc = "Focus Next Buffer" },
-      ["<C-x>"]   = { CloseBuffer,        desc = "Close Current Tab" },
-      ["<S-Tab>"] = { "<cmd>vert sb<CR>", desc = "Move to Vertical Split" },
+      ["<Tab>"]    = { NextBuffer,         desc = "Focus Next Buffer" },
+      ["<C-Tab>"]  = { PrevBuffer,         desc = "Focus Prev Buffer" },
+      ["<C-x>"]    = { CloseBuffer,        desc = "Close Current Tab" },
+      ["<CS-Tab>"] = { "<cmd>vert sb<CR>", desc = "Move to Vertical Split" },
       -- menu nagivation controls rework
       ["!"]         = { "<cmd>1wincmd w <CR>", desc = "Move to first window" },
       ["@"]         = { "<cmd>2wincmd w<CR>", desc = "Move to window #2" },
