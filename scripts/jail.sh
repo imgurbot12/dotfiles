@@ -13,7 +13,7 @@ patch_discord () {
   ensure_program discord
   # push firejail config to user profile
   log_info  "installing discord profile to $USER's config"
-  copy_home ".config/firejail/discord.profile"
+  copy_home ".config/firejail/discord.local"
   # push patched desktop launcher to applications folder
   log_info "installing patched discord desktop application (as root)"
   SUDO=1 copy_root "/usr/share/applications/discord.desktop"
