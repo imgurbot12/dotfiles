@@ -3,9 +3,14 @@ local notify  = require('notify')
 
 local reload  = require('plenary.reload')
 reload.reload_module('./user/window')
-reload.reload_module('./user/form')
+reload.reload_module('./user/form/form')
+reload.reload_module('./user/form/field')
+reload.reload_module('./user/form/text')
+
 local window = require('./user/window')
-local form  = require('./user/form')
+local text = require('./user/form/text') 
+local form = require('./user/form/form')
+
 local win = window:new({name = 'test', height = 4, width = 20, border = true})
 
 win:keymap('n', {
@@ -14,18 +19,17 @@ win:keymap('n', {
   -- ["<Enter>"] = function() notify('enter!') end,
 })
 
-local function esc(field)
-  notify(string.format('%s was pressed', field.name)) 
-end
-local map = { ["<Enter>"] = esc }
 
-local one = form.Field:new('one', { default = '1', keymap = map })
-local two = form.Field:new('two', { default = '2', keymap = map })
+local one = text('one', { default = '1' })
+local two = text('two', { default = '2' })
 
-local winform = form.Form:new({ one, two})
+local winform = form.Form:new({ one, two })
 winform:render(win)
 
-winform:apply_keymap(win)
+keymap = winform:apply_keymap(win)
+
+notify(vim.inspect(one))
+-- n_keymap["<Esc>"] = function() window:close() end
 
 -- win:set_cursor(3, 0)
 

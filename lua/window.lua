@@ -72,21 +72,24 @@ function Window:new(options)
   setmetatable(o, self)
   self.__index = self
   -- generate base window buffer
-  self.name = options.name
-  self.bufn = api.nvim_create_buf(false, true)
-  api.nvim_buf_set_option(self.bufn, 'bufhidden', 'wipe')
-  api.nvim_buf_set_option(self.bufn, 'filetype', options.name)
+  o.name = options.name
+  o.bufn = api.nvim_create_buf(false, true)
+  api.nvim_buf_set_option(o.bufn, 'bufhidden', 'wipe')
+  api.nvim_buf_set_option(o.bufn, 'filetype', options.name)
   -- build options for window and generate border (if enabled)
   local winopts = window_opts(options)
-  self.border = options.border == true and apply_border(winopts) or nil
+  o.border = options.border == true and apply_border(winopts) or nil
   -- generate window and apply border auto-close if not nil
-  self.win = api.nvim_open_win(self.bufn, true, winopts) 
-  if self.border then
-    local cmd = 'au BufWipeout <buffer> exe "silent bwipeout! "'..self.border.buffer
+  o.win = api.nvim_open_win(o.bufn, true, winopts) 
+  if o.border then
+    local cmd = 'au BufWipeout <buffer> exe "silent bwipeout! "'..o.border.buffer
     api.nvim_command(cmd)
   end
-  api.nvim_win_set_option(self.win, 'cursorline', true)
-  api.nvim_buf_add_highlight(self.bufn, -1, 'DapCppHeader', 0, 0, -1)
+  api.nvim_win_set_option(o.win, 'cursorline', true)
+  api.nvim_buf_add_highlight(o.bufn, -1, 'DapCppHeader', 0, 0, -1)
+  -- add additional attributes
+  o.wopts = winopts
+  o.cache = Cache:new(string.format('window_%s_keymap', o.name))
   -- return generated window object
   return o
 end
@@ -109,11 +112,15 @@ function Window:keymap(mode, binds, options)
   options.silent  = options.silent  or true
   -- configure keybind cache for lua functions
   local cmd
-  self.cache = Cache:new(string.format('window_%s_keymap', self.name), {})
   for bind, op in pairs(binds) do
     cmd = type(op) ~= "string" and cache_func(self.cache, mode, bind, op) or op
     api.nvim_buf_set_keymap(self.bufn, mode, bind, cmd, options)
   end
+end
+
+function Window:on_update(options)
+  assert(options, 'on_update function options must be specified')
+  vim.api.nvim_buf_attach(self.bufn, false, options)
 end
 
 function Window:writelines(lines)
@@ -133,6 +140,15 @@ function Window:set_cursor(row, col)
   assert(row, 'row number must be specified')
   assert(col, 'col number must be specified')
   api.nvim_win_set_cursor(self.win, { row, col })
+end
+
+function Window:move_cursor(row, col)
+  local height = self.wopts.height - 2
+  local width  = self.wopts.width  - 2
+  local cursor = self:get_cursor()
+  cursor       = { cursor[1] + (row or 0), cursor[2] + (col or 0) }
+  cursor       = { math.min(cursor[1], height), math.min(cursor[2], width) }
+  self:set_cursor(cursor[1], cursor[2])
 end
 
 function Window:close(force)

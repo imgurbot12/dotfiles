@@ -85,6 +85,8 @@ end
 
 -- setup dap for c/c++/rust debugging using lldb
 local function dap_setup_lldb()
+  require('notify')('this is a test!')
+
   local reload = require('plenary.reload')
   reload.reload_module('./user/test')
   require('./user/test')
@@ -192,7 +194,7 @@ local config = {
       -- improved terminal controls
       ["<C-l>"] = { '<C-l>', desc = "Clear Terminal Screen" },
       -- improved terminal window navigation
-      ["<C-q>"]     = { "exit<CR>",       desc = "Close Current Terminal" },
+      ["<C-q>"]     = { "<CR>exit<CR>",       desc = "Close Current Terminal" },
       ["<C-t>"]     = { term.toggle_term, desc = "Spawn Additional Terminal(s)" },
       ["<C-Up>"]    = { WindowUp,         desc = "Move to upper window" },
       ["<C-Down>"]  = { WindowDown,       desc = "Move to lower window" },
