@@ -1,0 +1,20 @@
+#!/bin/sh
+
+statgrep() {
+  echo "$1" | grep "$2:" | cut -d ':' -f2 | awk '{$1=$1; print $0}' 
+}
+
+display() {
+  stats="$(upower -i $(upower -e | grep '/battery'))"
+  state=$(statgrep "$stats" "state")
+  charge=$(statgrep "$stats" "percentage")
+  if [ "$state" = "discharging" ]; then
+    ttl=`echo $(statgrep "$stats" "time to empty") | sed 's/hours/hr/g' | sed 's/minutes/min/g'`
+    echo "▼ $charge ($ttl)"
+  else
+    ttl=`echo $(statgrep "$stats" "time to full") | sed 's/hours/hr/g' | sed 's/minutes/min/g'`
+    echo "▲ $charge ($ttl)"
+  fi
+}
+
+display
