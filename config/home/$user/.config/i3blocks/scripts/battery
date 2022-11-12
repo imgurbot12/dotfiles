@@ -8,13 +8,18 @@ display() {
   stats="$(upower -i $(upower -e | grep '/battery'))"
   state=$(statgrep "$stats" "state")
   charge=$(statgrep "$stats" "percentage")
+  arrow="▲"
   if [ "$state" = "discharging" ]; then
+    arrow="▼"
     ttl=`echo $(statgrep "$stats" "time to empty") | sed 's/hours/hr/g' | sed 's/minutes/min/g'`
-    echo "▼ $charge ($ttl)"
   else
     ttl=`echo $(statgrep "$stats" "time to full") | sed 's/hours/hr/g' | sed 's/minutes/min/g'`
-    echo "▲ $charge ($ttl)"
   fi
+  printf "%s %s" $arrow $charge
+  if [ -n "$ttl" ]; then
+    printf " ($ttl)"
+  fi
+  printf "\n"
 }
 
 display
