@@ -102,4 +102,5 @@ cmd_alias pbpaste "xclip" "-selection c -o"
 # interactive startup
 if [ ! -z "$PS1" ]; then
    ifc "neofetch" && neofetch
+   ifc "starship" && eval "$(starship init bash)" 
 fi

@@ -79,4 +79,5 @@ cmd_alias pbpaste "xclip" "-selection c -o"
 # interactive startup
 if status is-interactive
   if command -sq neofetch; neofetch; end
+  if command -sq starship; eval (starship init fish); end 
 end
