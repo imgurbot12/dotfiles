@@ -1,0 +1,3 @@
+# python compiled resources
+__pycache__
+*.py[cod]

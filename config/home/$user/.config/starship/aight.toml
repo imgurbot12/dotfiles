@@ -1,0 +1,29 @@
+# Aight Theme - Reimplemented and stolen from Fish theme
+
+format       = '($python )$character'
+right_format = '[(\($git_branch$git_status\))](fg:#555555) $directory'
+
+scan_timeout = 10
+add_newline  = false
+
+[python]
+format = '(\($virtualenv\))'
+
+[character]
+error_symbol   = '[\$](bold red)'
+success_symbol = '[\$](white)'
+
+[directory]
+style             = 'yellow'
+format            = '[\[](blue)[$path]($style)[\]](blue)'
+truncation_length = 3
+truncate_to_repo  = true
+
+[git_branch]
+style  = 'fg:#555555'
+format = '[$branch(:$remote_branch)]($style)'
+
+[git_status]
+style    = 'fg:#555555'
+format   = '[$modified]($style)'
+modified = '*'

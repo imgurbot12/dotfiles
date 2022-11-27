@@ -1,0 +1,40 @@
+#!/bin/sh
+
+#** Variables **#
+
+IFACE=${IFACE:-wlan0}
+
+#** Functions **#
+
+show () {
+  sudo iwctl station $IFACE show
+}
+
+scan () {
+  sudo iwctl station $IFACE scan
+  sudo iwctl station $IFACE get-networks
+}
+
+connect() {
+  [ -z "$1" ] && echo "[!] must supply wifi SSID" && exit 2
+  if sudo iwctl station wlan0 connect "$1"; then
+    dhclient -v $IFACE
+  fi
+}
+
+#** Init **#
+
+case "$1" in
+  "show")
+    show
+    ;;
+  "s"|"scan")
+    scan
+    ;;
+  "c"|"connect")
+    connect "$2" 
+    ;;
+  *)
+    echo "invalid command. try <show/scan/connect>"
+    ;;
+esac

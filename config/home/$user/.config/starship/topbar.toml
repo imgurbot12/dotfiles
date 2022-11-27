@@ -1,0 +1,97 @@
+
+format="""
+$username\
+$directory\
+$fill\
+$c\
+$rust\
+$golang\
+$python\
+$nodejs\
+$docker_context\
+$git_branch\
+$git_status\
+$cmd_duration\
+$time
+$character
+"""
+
+scan_timeout = 10
+add_newline  = false
+
+[fill]
+symbol = ' '
+style  = 'bg:#555555'
+
+[character]
+error_symbol   = '[\$](bold red)'
+success_symbol = '\$'
+
+[username]
+style_user  = 'bg:#9A348E fg:#DCE7E8'
+style_root  = 'bg:#9A348E fg:#DCE7E8'
+show_always = true
+format      = '[ $user ]($style)'
+
+[directory]
+style             = 'bg:#DA627D fg:#DCE7E8'
+format            = '[ $path ]($style)'
+truncation_length = 3
+truncation_symbol = '…/'
+
+[directory.substitutions]
+'Documents' = ''
+'Downloads' = ''
+'Music'     = ''
+'Pictures'  = ''
+
+[git_branch]
+symbol = ''
+style  = 'bg:#FCA17D fg:#DCE7E8'
+format = '[ $symbol $branch ]($style)'
+
+[git_status]
+style  = 'bg:#FCA17D fg:#DCE7E8'
+format = '[$all_status$ahead_behind ]($style)'
+
+[docker_context]
+symbol = ''
+style  = 'bg:#06969A fg:#DCE7E8'
+format = '[ $symbol $context ]($style) $path'
+
+[c]
+symbol = ''
+style  = 'bg:#86BBD8 fg:#DCE7E8'
+format = '[ $symbol ($version) ]($style)'
+
+[rust]
+symbol = ''
+style  = 'bg:#86BBD8 fg:#DCE7E8'
+format = '[ $symbol ($version) ]($style)'
+
+[golang]
+symbol = ''
+style  = 'bg:#86BBD8 fg:#DCE7E8'
+format = '[ $symbol ($version) ]($style)'
+
+[python]
+symbol = ''
+style  = 'bg:#86BBD8 fg:#DCE7E8'
+format = '[ $symbol ($version) ]($style)'
+
+[nodejs]
+symbol = ''
+style  = 'bg:#86BBD8 fg:#DCE7E8'
+format = '[ $symbol ($version) ]($style)'
+
+[cmd_duration]
+format             = '[ time=$duration ]($style)'
+min_time           = 5_000
+show_notifications = true
+style              = 'bg:white fg:black'
+
+[time]
+format      = '[ $time ]($style)'
+time_format = '%R' # Hour:Minute Format
+style       = 'bg:#33658A fg:#DCE7E8'
+disabled    = false

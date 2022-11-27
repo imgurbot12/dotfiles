@@ -11,6 +11,9 @@ set -x PONY_PATH  "$HOME/.local/share/ponyup"
 set -x NVM_PATH   "$HOME/.nvm"
 set -x PYENV_PATH "$HOME/.pyenv"
 
+# neovide config
+set -x NEOVIDE_MULTIGRID true
+
 #** Functions **#
 
 function add_path -a bin path -d "verbose `fish_add_path` for specific binaries"
@@ -79,4 +82,5 @@ cmd_alias pbpaste "xclip" "-selection c -o"
 # interactive startup
 if status is-interactive
   if command -sq neofetch; neofetch; end
+  if command -sq starship; eval (starship init fish); end 
 end

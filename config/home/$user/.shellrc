@@ -21,6 +21,9 @@ var PONY_PATH  "$HOME/.local/share/ponyup"
 var PYENV_PATH "$HOME/.pyenv"
 var NVM_PATH   "$HOME/.nvm"
 
+# neovide config items
+var NEOVIDE_MULTIGRID true
+
 #** Functions **#
 
 #: desc  => return 1 if the given command does not exist
@@ -102,4 +105,5 @@ cmd_alias pbpaste "xclip" "-selection c -o"
 # interactive startup
 if [ ! -z "$PS1" ]; then
    ifc "neofetch" && neofetch
+   ifc "starship" && eval "$(starship init bash)" 
 fi

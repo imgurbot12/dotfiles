@@ -1,0 +1,27 @@
+# FireJail pre-launch configuration for Discord
+
+# allow discord access to config directory
+noblacklist ${HOME}/.config/discord
+mkdir       ${HOME}/.config/discord
+whitelist   ${HOME}/.config/discord
+
+# disable components much earlier during launch
+include /etc/firejail/disable-common.inc
+include /etc/firejail/disable-devel.inc
+include /etc/firejail/disable-programs.inc
+
+# disable temp
+private-tmp
+noexec /tmp
+
+# additional restrictions
+caps.drop all
+netfilter
+nodvd
+nogroups
+nonewprivs
+noroot
+notv
+novideo
+protocol unix,inet,inet6,netlink
+
