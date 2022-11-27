@@ -11,6 +11,9 @@ set -x PONY_PATH  "$HOME/.local/share/ponyup"
 set -x NVM_PATH   "$HOME/.nvm"
 set -x PYENV_PATH "$HOME/.pyenv"
 
+# neovide config
+set -x NEOVIDE_MULTIGRID true
+
 #** Functions **#
 
 function add_path -a bin path -d "verbose `fish_add_path` for specific binaries"
