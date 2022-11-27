@@ -94,15 +94,16 @@ push_root () {
 [ -n "$ISLIB" ] && return 0
 
 case "$1" in
-  "home")         push_home         ;;
-  "root")         push_root         ;;
-  "config")       push_dotconfig    ;;
-  "posixcfg")     push_posix        ;;
-  "xonshcfg")     push_xonsh        ;;
-  "fishcfg")      push_fish         ;;
-  "starshipcfg")  push_starship     ;;
-  "firejail")     push_firejail     ;;
-  "desktop_apps") push_desktop_apps ;;
+  "nvim"|"neovim") push_nvim         ;;
+  "home")          push_home         ;;
+  "root")          push_root         ;;
+  "config")        push_dotconfig    ;;
+  "posixcfg")      push_posix        ;;
+  "xonshcfg")      push_xonsh        ;;
+  "fishcfg")       push_fish         ;;
+  "starshipcfg")   push_starship     ;;
+  "firejail")      push_firejail     ;;
+  "desktop_apps")  push_desktop_apps ;;
   *)
     log_error "invalid command. try <home/root/config/...>"
     exit 1

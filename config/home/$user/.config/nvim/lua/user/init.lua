@@ -10,23 +10,76 @@ local NextBuffer  = "<cmd>BufferLineCycleNext<cr>"
 local PrevBuffer  = "<cmd>BufferLineCyclePrev<cr>"
 local CloseBuffer = "<cmd>bp<bar>sp<bar>bn<bar>bd<CR>"
 
-local ToggleTermNum = "<cmd>exec v:count1 . 'ToggleTerm size=10 direction=horizontal'<CR>"
-
 ---- Functions
+
+-- run function if module import is a success, else notify failure
+local function use(pkg, run, silent)
+  local library = nil 
+  if pcall(function() library = require(pkg) end) then
+    run(library)
+  elseif not silent then
+      require('notify')(string.format('module not installed: %s', pkg), 'error')
+  end
+end
+
+-- Telescope Wrappers
 
 -- wrapper to call telescope grep on active buffer
 local function telescope_grep()
-  require("telescope.builtin").current_buffer_fuzzy_find()
+  use('telescope.builtin', function(ts) 
+    ts.current_buffer_fuzzy_find() 
+  end)
 end
 
 -- wrapper to call telescope grep on the entire project
 local function telescope_grep_all(settings)
-  require("telescope.builtin").live_grep(settings)
+  use('telescope.builtin', function(ts) 
+    ts.live_grep(settings) 
+  end)
 end
 
 -- wrapper to call telescope to search only open files
 local function telescope_grep_open()
   telescope_grep_all({ grep_open_files=true })
+end
+
+-- Terminal Wrappers
+
+-- spawn a new terminal w/ the given settings
+local function term_new(options)
+  use('terminal', function(term) 
+    term.new_term(options) 
+  end)
+end
+
+-- shutdown actively hovered terminal session
+local function term_shutdown_active()
+  use('terminal', function(term) 
+    term.shutdown_active() 
+  end)
+end
+
+-- bind a new function to spawn a new terminal for the given direction
+local function term_bind_toggle(direction)
+  return function()
+    use('terminal', function(term)
+      return term.new_term({ direction = direction })
+    end) 
+  end
+end
+
+-- toggle all terminal instances
+local function term_toggle_all()
+  use('terminal', function(term) 
+    term.toggle_all() 
+  end)
+end
+
+-- shutdown all terminal sessions
+local function term_shutdown_all()
+  use('terminal', function(term) 
+    term.shutdown_all() 
+  end)
 end
 
 ---- Configuration
@@ -71,6 +124,7 @@ local config = {
   -- Configure plugins
   plugins = {
     init = {
+      { "imgurbot12/essentials.nvim" },
       { "junegunn/fzf", run = function() vim.fn['fzf#install']() end},
       { "kevinhwang91/nvim-bqf" },
       { "euclio/vim-markdown-composer", run = "cargo build --release" },
@@ -127,17 +181,21 @@ local config = {
       -- improved terminal controls
       ["<C-l>"] = { '<C-l>', desc = "Clear Terminal Screen" },
       -- improved terminal window navigation
-      ["<C-t>"]     = { ToggleTermNum, desc = "Spawn Additional Terminal(s)" },
-      ["<C-Up>"]    = { WindowUp,      desc = "Move to upper window" },
-      ["<C-Down>"]  = { WindowDown,    desc = "Move to lower window" },
-      ["<C-Left>"]  = { WindowLeft,    desc = "Move to left window"  },
-      ["<C-Right>"] = { WindowRight,   desc = "Move to right window" },
+      ["<C-q>"]     = { term_shutdown_active, desc = "Close Current Terminal" },
+      ["<C-t>"]     = { term_new,             desc = "Spawn Additional Terminal(s)" },
+      ["<C-Up>"]    = { WindowUp,             desc = "Move to upper window" },
+      ["<C-Down>"]  = { WindowDown,           desc = "Move to lower window" },
+      ["<C-Left>"]  = { WindowLeft,           desc = "Move to left window"  },
+      ["<C-Right>"] = { WindowRight,          desc = "Move to right window" },
     },
     n = {
       -- quit shortcut
       ["<C-c>"] = { "<cmd>q<CR>" },
       -- terminal shortcuts
-      ["t"] = { ToggleTermNum, desc = "Toggle Termimal By Number" },
+      ["ta"]       = { term_toggle_all,       desc = "Toggle All Terminals" },
+      ["tq"]       = { term_shutdown_all,     desc = "Shutdown All Terminals" },
+      ["t<Right>"] = { term_bind_toggle('v'), desc = "Toggle Vertical Term" },
+      ["t<Down>"]  = { term_bind_toggle('h'), desc = "Toggle Horizonal Term" },
       -- telescope search navigation
       ["<C-f>"]  = { telescope_grep,     desc = "Grep current buffer" },
       ["<CS-f>"] = { telescope_grep_all, desc = "Grep project files" },
