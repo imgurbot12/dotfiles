@@ -6,35 +6,123 @@ IFACE=${IFACE:-wlan0}
 
 #** Functions **#
 
-show () {
+## utility functions
+
+getpass () {
+  printf "$1"
+  stty -echo
+  read password
+  stty echo
+  printf '\n'
+}
+
+## iwctl connection tools
+
+show_iwctl () {
   sudo iwctl station $IFACE show
 }
 
-scan () {
+scan_iwctl () {
   sudo iwctl station $IFACE scan
   sudo iwctl station $IFACE get-networks
 }
 
-connect() {
+connect_iwctl() {
   [ -z "$1" ] && echo "[!] must supply wifi SSID" && exit 2
   if sudo iwctl station wlan0 connect "$1"; then
     dhclient -v $IFACE
   fi
 }
 
+## nmcli connection tools
+
+show_nmcli() {
+  nmcli dev status
+}
+
+scan_nmcli() {
+  nmcli dev wifi list --rescan auto
+}
+
+connect_nmcli () {
+  [ -z "$1" ] && echo "[!] must supply wifi SSID" && exit 2
+  ssid="$1"
+  tout="${3:-5}s"
+  # read password from input
+  getpass "$1's Password: "
+  # attempt to login w/ configured timeout
+  if timeout -k $tout $tout nmcli dev wifi connect "$ssid" password "$password"; then
+    echo "[*] command success"
+    return
+  fi
+  echo "[!] command returned non-zero status"
+}
+
+## tool wrappers
+
+show () {
+  case "$tool" in
+    "nmcli") show_nmcli $@ ;;
+    "iwctl") show_iwctl $@ ;;
+  esac;
+}
+
+scan () {
+  case "$tool" in
+    "nmcli") scan_nmcli $@ ;;
+    "iwctl") scan_iwctl $@ ;;
+  esac
+}
+
+connect () {
+  case "$tool" in
+    "nmcli") connect_nmcli $@ ;;
+    "iwctl") connect_iwctl $@ ;;
+  esac
+}
+
+## utility functions
+
+# find best wifi tool installed
+find_tooling () {
+  for toolopt in "nmcli" "iwctl"; do
+    if command -v "$toolopt" >/dev/null 2>&1; then
+      echo "$toolopt"
+      break
+    fi
+  done
+}
+
+# process arguments and run linked commands
+run_command () {
+  # get command from first argument and shift args for $@
+  cmd="$1"
+  shift
+  # run associated wifi tool
+  case "$cmd" in
+    "show")
+      show $@
+      ;;
+    "s"|"scan")
+      scan $@
+      ;;
+    "c"|"connect")
+      connect $@ 
+      ;;
+    *)
+      echo "invalid command. try <show/scan/connect>"
+      ;;
+  esac
+}
+
 #** Init **#
 
-case "$1" in
-  "show")
-    show
-    ;;
-  "s"|"scan")
-    scan
-    ;;
-  "c"|"connect")
-    connect "$2" 
-    ;;
-  *)
-    echo "invalid command. try <show/scan/connect>"
-    ;;
-esac
+# error if no tool was found
+tool=$(find_tooling)
+if [ ! -z "$tool" ]; then
+  echo "[*] using wireless tool: $tool"
+else
+  echo "[!] no supported wireless tool found." && exit 1
+fi
+
+run_command $@
