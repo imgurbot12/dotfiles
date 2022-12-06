@@ -70,6 +70,7 @@ install_nvim () {
     dest="$BIN/nvim"
     log_info "downloading neovim appimage to '$dest' (as root)"
     sudo curl -L "$NVIM_BINARY" -o $dest
+    sudo chmod +x $dest
   fi
   # clone and install packer
   if [ ! -d "$NVIM_PACKER_INSTALL" ]; then

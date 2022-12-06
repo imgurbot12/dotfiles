@@ -12,75 +12,68 @@ local CloseBuffer = "<cmd>bp<bar>sp<bar>bn<bar>bd<CR>"
 
 ---- Functions
 
--- run function if module import is a success, else notify failure
-local function use(pkg, run, silent)
+-- geneate new mock object w/ optional notify function
+local function new_mock(notify)
+  local mock = {};
+  setmetatable(mock, {
+    __index=function () return function() end end,
+    __call=function()
+      if notify ~= nil then
+        notify()
+      end
+      return mock 
+    end,
+  })  
+  return mock
+end
+
+-- return module if found, else return mock object to take no action
+local function use(pkg, silent)
   local library = nil 
+  if not pcall(function() library = require(pkg) end) then
+      return new_mock(function()
+        if not silent then
+          require('notify')(string.format('module not found: %s', pkg), 'error')
+        end
+      end) 
+  end
+  return library
+end
+
+-- run function if package exists (for setup)
+local function setup(pkg, run)
+  local library = nil
   if pcall(function() library = require(pkg) end) then
     run(library)
-  elseif not silent then
-      require('notify')(string.format('module not installed: %s', pkg), 'error')
   end
 end
 
--- Telescope Wrappers
+-- Function Wrappers
 
--- wrapper to call telescope grep on active buffer
-local function telescope_grep()
-  use('telescope.builtin', function(ts) 
-    ts.current_buffer_fuzzy_find() 
-  end)
-end
+-- telscope search function
+local telescope_grep     = use 'telescope.builtin' .current_buffer_fuzzy_find
+local telescope_grep_all = use 'telescope.builtin' .live_grep
 
--- wrapper to call telescope grep on the entire project
-local function telescope_grep_all(settings)
-  use('telescope.builtin', function(ts) 
-    ts.live_grep(settings) 
-  end)
-end
-
--- wrapper to call telescope to search only open files
-local function telescope_grep_open()
-  telescope_grep_all({ grep_open_files=true })
-end
-
--- Terminal Wrappers
-
--- spawn a new terminal w/ the given settings
-local function term_new(options)
-  use('terminal', function(term) 
-    term.new_term(options) 
-  end)
-end
-
--- shutdown actively hovered terminal session
-local function term_shutdown_active()
-  use('terminal', function(term) 
-    term.shutdown_active() 
-  end)
-end
+-- terminal wrappers
+local term_new             = use 'terminal' .new_term
+local term_toggle_all      = use 'terminal' .toggle_all
+local term_shutdown_active = use 'terminal' .shutdown_active
+local term_shutdown_all    = use 'terminal' .shutdown_all
 
 -- bind a new function to spawn a new terminal for the given direction
 local function term_bind_toggle(direction)
   return function()
-    use('terminal', function(term)
-      return term.new_term({ direction = direction })
-    end) 
+    use 'terminal' .new_term({ direction = direction })
   end
 end
 
--- toggle all terminal instances
-local function term_toggle_all()
-  use('terminal', function(term) 
-    term.toggle_all() 
-  end)
-end
+-- dap/dapui wrappers
 
--- shutdown all terminal sessions
-local function term_shutdown_all()
-  use('terminal', function(term) 
-    term.shutdown_all() 
-  end)
-end
+local dap_continue          = use 'dap'   .continue
+local dap_toggle_breakpoint = use 'dap'   .toggle_breakpoint
+local dap_step_over         = use 'dap'   .step_over
+local dap_step_into         = use 'dap'   .step_into
+local dapui_eval            = use 'dapui' .eval
 
 ---- Configuration
 
@@ -128,6 +121,10 @@ local config = {
       { "junegunn/fzf", run = function() vim.fn['fzf#install']() end},
       { "kevinhwang91/nvim-bqf" },
       { "euclio/vim-markdown-composer", run = "cargo build --release" },
+      -- dap plugins
+      { "mfussenegger/nvim-dap" },
+      { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} },
+      { "mfussenegger/nvim-dap-python", requires = {"mfussenegger/nvim-dap"} },
     },
     ["toggleterm"] = {
       start_in_insert = true,
@@ -221,6 +218,12 @@ local config = {
       ["<S-Down>"]  = { "<cmd>resize -2<CR>",          desc = "Resize split down" },
       ["<S-Left>"]  = { "<cmd>vertical resize -2<CR>", desc = "Resize split left" },
       ["<S-Right>"] = { "<cmd>vertical resize +2<CR>", desc = "Resize split right" },
+      -- debugger commands
+      ["<F4>"] = { dap_continue,          desc = "Debugger Continue"},
+      ["<F5>"] = { dap_toggle_breakpoint, desc = "Debugger Toggle Breakpoint" },
+      ["<F6>"] = { dapui_eval,            desc = "Debugger UI Eval" },
+      ["<F8>"] = { dap_step_over,         desc = "Debuffer Step Over" }, 
+      ["<F9>"] = { dap_step_into,         desc = "Debugger Step Into"},
       -- plugin commands
       ["<A-m>"] = { "<cmd>ComposerStart<CR>", desc = "Open Markdown Preview" },
       ["<A-s>"] = { "<cmd>SessionManager save_current_session<CR>", desc = "Save Session" },
@@ -240,13 +243,31 @@ local config = {
   -- This function is run last
   -- good place to configuring augroups/autocommands and custom filetypes
   polish = function()
+    -- configure and enable available debuggers
+    setup('dap', function(dap)
+      -- setup dapui
+      setup('dapui', function(dapui)
+        dapui.setup()
+        local after = dap.listeners.after
+        local before = dap.listeners.before
+        after.event_initialized["dapui_config"] = dapui.open
+        before.event_terminated["dapui_config"] = dapui.close
+        before.event_exited["dapui_config"]     = dapui.close
+      end)
+      -- setup dap-python if available
+      setup('dap-python', function(python) 
+        python.setup('~/.virtualenvs/debugpy/bin/python')
+      end)
+    end)
+    -- update function keymapping for better-quick-fix
+    setup('bqf', function(bqf) 
+      bqf.setup({ func_map = {
+        filter  = "<C-f>",
+        filterr = "<C-d>",
+      }})
+    end)
     -- disable markdown-preview autostart
     vim.cmd("let g:markdown_composer_autostart = 0")
-    -- update function keymapping for better-quick-fix
-    require('bqf').setup({ func_map = {
-      filter  = "<C-f>",
-      filterr = "<C-d>",
-    }})
   end,
 }
 return config
