@@ -6,6 +6,7 @@ set -x GOROOT     "/usr/local/go"
 set -x GOPATH     "$HOME/Desktop/code/golang"
 set -x CARGO_PATH "$HOME/.cargo"
 set -x PONY_PATH  "$HOME/.local/share/ponyup"
+set -x RTX_PATH   "$HOME/.local/share/rtx"
 
 # omf installs
 set -x NVM_PATH   "$HOME/.nvm"
@@ -54,13 +55,14 @@ ensure_path "<builtin>" "$HOME/bin"
 ensure_path "<builtin>" "$HOME/.local/bin"
 
 # omf => nvm / pyenv
-ensure_omf "nvm"   "$NVM_PATH"
-ensure_omf "pyenv" "$PYENV_PATH" 
+# ensure_omf "nvm"   "$NVM_PATH"
+# ensure_omf "pyenv" "$PYENV_PATH" 
 
 # path => golang / rust (cargo) / pony / pyenv
 ensure_path "go"    "$GOROOT/bin"     "$GOPATH/bin"
 ensure_path "cargo" "$CARGO_PATH/bin"
 ensure_path "ponyc" "$PONY_PATH/bin"
+ensure_path "rtx"   "$RTX_PATH/bin"
 ensure_path "pyenv" "$PYENV_PATH/bin"
 
 # command aliases
@@ -82,5 +84,6 @@ cmd_alias pbpaste "xclip" "-selection c -o"
 # interactive startup
 if status is-interactive
   if command -sq neofetch; neofetch; end
-  if command -sq starship; eval (starship init fish); end 
+  if command -sq starship; eval (starship init fish); end
+  if command -sq rtx;      rtx activate -s fish | source; end
 end

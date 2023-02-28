@@ -40,6 +40,11 @@ CARGOENV="$HOME/.cargo/env"
 #: online script resource to install pyenv
 PYENV="https://pyenv.run"
 
+## Rtx variables
+
+#: online script to install rtx multi-env language installer
+RTX="https://rtx.pub/install.sh"
+
 ## Golang variables
 
 #: latest golang packaged release
@@ -174,6 +179,12 @@ install_pyenv () {
   curl -L $PYENV | bash
 }
 
+install_rtx () {
+  ensure_program bash
+  has_binary rtx && log_info "rtx is already installed." && return 0
+  curl -L $RTX | bash
+}
+
 install_golang () {
   has_binary go && log_info "golang is already installed." && return 0
   # download latest release
@@ -223,6 +234,7 @@ case "$1" in
   "rust")       install_rust            ;;
   "rust-utils") install_rust_utils "$2" ;;
   "pyenv")      install_pyenv           ;;
+  "rtx")        install_rtx             ;;
   "golang")     install_golang          ;;
   "starship")   install_starship        ;;
   *)
