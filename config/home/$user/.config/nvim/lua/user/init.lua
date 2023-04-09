@@ -15,8 +15,8 @@ local VertSplit  = '<cmd>vert sb<CR>'
 local VertGrow   = '<cmd>vertical resize +2<CR>'
 local VertShrink = '<cmd>vertical resize -2<CR>' 
 
-local NextBuffer  = '<cmd>bn<cr>'
-local PrevBuffer  = '<cmd>bp<cr>'
+local NextBuffer  = ']b'
+local PrevBuffer  = '[b'
 local CloseBuffer = '<cmd>bp<bar>sp<bar>bn<bar>bd<CR>'
 
 local MardownPreview = '<cmd>ComposerStart<CR>'
@@ -61,6 +61,14 @@ end
 
 -- Function Wrappers --
 
+local function nextbuf()
+  vim.api.nvim_feedkeys(NextBuffer, 'm', false)
+end
+
+local function prevbuf()
+  vim.api.nvim_feedkeys(PrevBuffer, 'm', false)
+end
+
 local function ts_grep()
   use('telescope.builtin').current_buffer_fuzzy_find()
 end
@@ -94,8 +102,8 @@ end
 -- Additonal Mappings --
 
 -- Buffer Navigation
-keymap('n', '<Tab>',   NextBuffer,  { desc = 'Focus Next Buffer' })
-keymap('n', '<C-Tab>', PrevBuffer,  { desc = 'Focus Previous Buffer' })
+keymap('n', '<Tab>',   nextbuf,     { desc = 'Focus Next Buffer' })
+keymap('n', '<C-Tab>', prevbuf,     { desc = 'Focus Previous Buffer' })
 keymap('n', '<C-x>',   CloseBuffer, { desc = 'Close Current Tab' })
 keymap('n', '<S-Tab>', VertSplit,   { desc = 'Move to Vertical Split' })
 
@@ -156,7 +164,10 @@ return {
     show_changelog = true,
   },
   plugins = {
+    -- additional plugins
     { 'imgurbot12/essentials.nvim' },
     { 'euclio/vim-markdown-composer', build = 'cargo build --release' },
+    -- overrides
+    { 'akinsho/toggleterm.nvim', start_in_insert = true }
   }
 }
