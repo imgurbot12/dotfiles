@@ -7,10 +7,17 @@ set -e
 
 #** Variables **#
 
+#: loglevel configuration 
 LOGLEVEL=${LOGLEVEL:-1}
 
+#: dirpath of self
 DIR=$(dirname $0)
-CONFIG=`realpath "$DIR/../config"`
+
+#: dotfiles directory
+DOTFILES=`realpath "$DIR/../dotfiles"`
+
+#: patches directory
+PATCHES=`realpath "$DIR/../patches"`
 
 #** Functions **#
 
@@ -65,6 +72,37 @@ file_mkdir () {
   file_do "mkdir" "$@" 
 }
 
+### Copy Utilities
+
+#: desc  => copy file-structure from one tree to another
+#: usage => $cfg-base $real-base $path
+_copy () {
+  file=$(echo $3 | sed 's~^/~~')
+  src="${1%%/}/$file"
+  dest="${2%%/}/${file%%.}"
+  dest_dir=$(dirname $dest)
+  [ -d "$dest_dir" ] || file_mkdir "-p $dest_dir"
+  file_copy "-rf '$src' '$dest'"
+}
+
+#: desc  => copy binary to $HOME/.local/bin/
+#: usage => $binary-name
+copy_bin() {
+  _copy "$DOTFILES/local/bin" "$HOME/.local/bin" "$1"
+}
+
+#: desc  => copy file/directory tree into dotconfig dir
+#: usage => $path
+copy_config() {
+  _copy "$DOTFILES/config" "$HOME/.config" "$1"
+}
+
+#: desc  => copy file/directory tree into home dir
+#: usage => $path 
+copy_home() {
+  _copy "$DOTFILES" "$HOME" "$1"
+}
+
 ### Additional Utilities
 
 #: desc  => return 0 if binary is found
@@ -80,9 +118,18 @@ ensure_program () {
   pkg=${2:-"$1"}
   if ! has_binary $1; then
     log_error "program: '$pkg' was not found and must be installed"
-    exit 1
+    return 1
   fi
   log_debug "package '$pkg' is installed"
+}
+
+#: desc => ensure cargo-binstall is installed
+ensure_binstall() {
+  ensure_program cargo rust
+  if ! cargo binstall --help >/dev/null 2>&1; then
+    log_error "cargo binstall not detected. cannot install."
+    exit 1
+  fi
 }
 
 #: desc  => get version of requested binary if it exists
@@ -116,4 +163,3 @@ fi
 log_info "checking for required programs"
 ensure_program git
 ensure_program curl
-
