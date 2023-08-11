@@ -12,12 +12,14 @@ LOC_URL="https://ipinfo.io/"
 #** Init **#
 
 # ensure all required programs are installed
-ensure_program sway     || export doexit=1
-ensure_program swaylock || export doexit=1
-ensure_program waybar   || export doexit=1
-ensure_program grim     || export doexit=1
-ensure_program dunst    || export doexit=1
-ensure_program redshift || export doexit=1
+ensure_program sway      || export doexit=1
+ensure_program swaylock  || export doexit=1
+ensure_program waybar    || export doexit=1
+ensure_program grim      || export doexit=1
+ensure_program dunst     || export doexit=1
+ensure_program redshift  || export doexit=1
+ensure_program pactl     || export doexit=1
+ensure_program playerctl || export doexit=1
 [ ! -z "$doexit" ] && exit 1
 
 # copy sway related shell script programs
@@ -28,6 +30,7 @@ copy_bin "lock"
 log_info "installing configuration files"
 copy_config "sway/."
 copy_config "waybar/."
+copy_config "dunst/."
 
 # calcualte lattitude and longitude and generate config
 log_info "calculating lattitude/longitude"
