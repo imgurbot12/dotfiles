@@ -1,0 +1,38 @@
+#!/bin/sh
+
+# execute swaylock w/ preffered defaults
+lock() {
+  swaylock -e -f -l -i $1
+}
+
+# burred screenshot as background
+screenshot() {
+  # generate screenshot w/ gausian blur
+  fpath=`mktemp`
+  grim $fpath
+  convert -filter Gaussian -resize 20% -blur 0x2.5 -resize 500% $fpath $fpath
+  # enable lock and delete afterwards
+  lock $fpath
+  rm $fpath
+}
+
+# build swaylock w/ standard image
+image() {
+  fpath="$1"
+  if [ ! -f "$fpath" ]; then
+    echo "[!] no such file: '$fpath'"
+    return 1
+  fi
+  lock $fpath
+}
+
+#** Init **#
+
+case "$1" in
+  "screenshot"|"screen")
+    screenshot
+    ;;
+  *)
+    image "$1" || screenshot
+    ;;
+esac
