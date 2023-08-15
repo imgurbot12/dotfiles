@@ -5,6 +5,7 @@ set $power ~/.config/rofi/modi/power
 set $wifi  ~/.config/rofi/modi/nmcli
 set $term  alacritty
 set $menu rmenu -r run
+set $windowswap rmenu -r window
 set $screenshot grim ~/Pictures/Screenshots/scrn-$(date +"%Y-%m-%d-%H-%M-%S").png
 set $screenclip slurp | grim -g - ~/Images/screenshots/scrn-$(date +"%Y-%m-%d-%H-%M-%S").png
 set $background ~/Pictures/anime-background2.png
@@ -62,6 +63,12 @@ exec dunst
 exec redshift -c ~/.config/redshift.conf
 # exec --no-startup-id libinput-gestures
 
+# Common Apps
+exec brave-browser
+exec discord
+exec signal-desktop
+exec rhythmbox
+
 # Input configuration
 # input * {
 #     xkb_layout us
@@ -74,16 +81,18 @@ output * bg $background fill
 
 # Default workspaces for common programs
 assign [class="^Brave-browser$"] $ws2
-# assign [class="^code-oss$"] $ws2
 assign [class="^Signal$"] $wsF1
 assign [class="^discord$"] $wsF1
+assign [class="^VirtualBox Manager"] $wsF8
 assign [app_id="virt-manager"] $wsF8
+assign [app_id="rhythmbox"] $wsF12
 
 # Shortcuts
 bindsym $mod+Return exec $term
 bindsym $mod+Print exec $screenshot
 bindsym $mod+Shift+Print exec $screenclip
 bindsym $mod+r exec $menu
+bindsym Alt+Tab exec $windowswap
 
 bindsym $mod+Shift+q kill
 bindsym $mod+Shift+c reload
@@ -103,9 +112,9 @@ bindsym $mod+Shift+n exec dunstctl close-all
 bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume $(pacmd list-sinks |awk '/* index:/{print $3}') +5%
 bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume $(pacmd list-sinks |awk '/* index:/{print $3}') -5%
 bindsym --locked XF86AudioMute exec pactl set-sink-mute $(pacmd list-sinks |awk '/* index:/{print $3}') toggle
-bindsym --locked XF86AudioPlay exec playerctl play-pause
-bindsym --locked XF86AudioNext exec playerctl next
-bindsym --locked XF86AudioPrev exec playerctl previous
+bindsym --locked XF86AudioPlay exec playerctl --player playerctld play-pause
+bindsym --locked XF86AudioNext exec playerctl --player playerctld next
+bindsym --locked XF86AudioPrev exec playerctl --player playerctld previous
 
 # Brightness controls
 bindsym --locked XF86MonBrightnessUp exec light -A 10
