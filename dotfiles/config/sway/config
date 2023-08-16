@@ -5,6 +5,7 @@ set $power ~/.config/rofi/modi/power
 set $wifi rmenu -r network
 set $term alacritty
 set $menu rmenu -r run
+set $deskmenu   rmenu -r drun
 set $audiomenu  rmenu -r audio
 set $windowswap rmenu -r window
 set $screenshot grim ~/Pictures/Screenshots/scrn-$(date +"%Y-%m-%d-%H-%M-%S").png
@@ -58,6 +59,9 @@ hide_edge_borders smart
 gaps inner 5
 gaps outer 5
 
+# Allow Controlling Windows with Mouse
+floating_modifier $mod normal
+
 # Autostart
 xwayland enable
 exec dunst
@@ -88,11 +92,16 @@ assign [class="^VirtualBox Manager"] $wsF8
 assign [app_id="virt-manager"] $wsF8
 assign [app_id="rhythmbox"] $wsF12
 
+# Floating Modifiers
+for_window [app_id="pavucontrol"] floating enable
+for_window [app_id="pavucontrol"] border normal
+
 # Shortcuts
 bindsym $mod+Return exec $term
 bindsym $mod+Print exec $screenshot
 bindsym $mod+Shift+Print exec $screenclip
 bindsym $mod+r exec $menu
+bindsym $mod+d exec $deskmenu
 bindsym $mod+Shift+s exec $audiomenu
 bindsym Alt+Tab exec $windowswap
 
@@ -244,6 +253,7 @@ mode "$mode_system" {
 }
 bindsym $mod+Shift+e mode "$mode_system"
 
+# Always Run
 exec_always ~/.config/waybar/waybar.sh
 
 include /etc/sway/config.d/*
