@@ -1,58 +1,151 @@
 {
-  "layer":    "top",
-  "position": "top",
-  "height":   15,
-  "width":    1280,
-  "spacing":  4,
-  "modules-left":   ["sway/workspaces", "sway/mode"],
-  "modules-center": ["sway/window"],
-  "modules-right":  ["network", "battery", "clock", "tray"],
-  // left modules
-  "sway/workspaces": {
-    "disable-scroll": true,
-    "all-outputs": true,
-    "format": "{name}"
-    /* "format-icons": { */
-    /*   "1": "", */
-    /*   "2": "", */
-    /*   "3": "",  */
-    /*   "4": "", */
-    /*   "5": "", */
-    /*   "6": "", */
-    /*   "urgent": "", */
-    /*   "focused": "", */
-    /*   "default": "" */
-    /* } */
-  },
-  // center modules
-  "sway/mode": {
-    "format": "({})"
-  },
-  // right-modules
-  "network": {
-    "format-wifi":         "  {signalStrength}%",
-    "format-ethernet":     "ﯱ",
-    "tooltip-format":      "{ipaddr}/{cidr} ({ifname})",
-    "format-linked":       "",
-    "format-disconnected": "Disconnected "
-  },
-  "battery": {
-    // "bat": "BAT",
-    "interval": 60,
-    "states": {
-        "warning": 30,
-        "critical": 15
+    "layer":         "top",
+    "position":      "top",
+    "height":        35,
+    "spacing":       4,
+    "margin-bottom": 5,
+
+    // Choose the order of the modules
+    "modules-left":[ "sway/workspaces", "idle_inhibitor", "pulseaudio", "cpu", "memory", "temperature"],
+    "modules-center": [ "custom/launcher", "custom/media", "sway/window", "custom/power"],
+    "modules-right": ["custom/layout", "custom/updater", "custom/snip", "backlight", "keyboard-state", "battery", "network", "tray", "clock"],
+ 
+    // Modules configuration
+    "keyboard-state": {
+        "numlock": true,
+        "capslock": true,
+        "format": " {name} {icon}",
+        "format-icons": {
+            "locked": "",
+            "unlocked": ""
+        }
     },
-    "format": "{icon} {capacity}%",
-    "format-icons": ["", "", "", "", ""],
-    "max-length": 25
-  },
-  "clock": {
-    "timezone":       "America/Phoenix",
-    "format-alt":     "{:%Y-%m-%d}"
-    // "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
-  },
-  "tray": {
-    "spacing": 10
-  }
+    "sway/workspaces": {
+        "disable-scroll": true,
+        "all-outputs": true,
+        "format": "{name}"
+    },
+    "wlr/taskbar": {
+        "format": "{icon}",
+        "icon-size": 20,
+        "icon-theme": "Star",
+        "tooltip-format": "{title}",
+        "on-click": "minimize",
+        "on-click-middle": "close",
+        "on-click-right": "activate"
+    },
+   "sway/language": {
+        "format": " {}",
+    },
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "",
+            "deactivated": ""
+        }
+    },
+    "tray": {
+        "icon-size": 20,
+        "spacing": 10
+    },
+    "clock": {
+        "timezone": "America/Phoenix",
+        // "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+        "format-alt": "{:%Y-%m-%d}"
+    },
+    "cpu": {
+        "format": "{usage}% ",
+        "tooltip": false
+    },
+    "memory": {
+        "format": "{}% "
+    },
+    "temperature": {
+        // "thermal-zone": 2,
+        // "hwmon-path": "/sys/class/hwmon/hwmon2/temp1_input",
+        "critical-threshold": 80,
+        // "format-critical": "{temperatureC}°C {icon}",
+        "format": "{temperatureC}°C {icon}",
+        "format-icons": ["", "", ""]
+    },
+    "backlight": {
+        "format": "{percent}% {icon}",
+        "format-icons": ["", ""]
+    },
+    "battery": {
+        "states": {
+            // "good": 95,
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{capacity}% {icon}",
+        "format-charging": "{capacity}% ",
+        "format-plugged": "{capacity}% ",
+        "format-alt": "{time} {icon}",
+        "format-icons": ["", "", "", "", ""]
+    },
+    "battery#bat2": {
+        "bat": "BAT2"
+    },
+    "network": {
+        // "interface": "wlp2*", // (Optional) To force the use of this interface
+        "format-wifi": "{essid} ({signalStrength}%) ",
+        "format-ethernet": "Connected  ",
+        "tooltip-format": "{ifname} via {gwaddr} ",
+        "format-linked": "{ifname} (No IP) ",
+        "format-disconnected": "Disconnected ⚠",
+        "format-alt": "{ifname}: {ipaddr}/{cidr}",
+        "on-click-right": "rmenu -r network"
+    },
+    "pulseaudio": {
+        "format": "{volume}% {icon}",
+        "format-bluetooth": "{volume}% {icon}",
+        "format-bluetooth-muted": "{icon} {format_source}",
+        "format-muted": "{format_source}",
+        "format-source": "",
+        "format-source-muted": "",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", "", ""]
+        },
+        "on-click": "pavucontrol"
+    },
+    "custom/media": {
+        "format": "{icon}",
+        "return-type": "json",
+        "max-length": 15,
+        "format-icons": {
+            "spotify": "",
+            "default": ""
+        },
+        "escape": true,
+        // "exec": "$HOME/.config/system_scripts/mediaplayer.py 2> /dev/null",
+        "on-click": "playerctl play-pause"
+    },
+    "custom/launcher":{
+        "format": "",
+        "on-click": "rmenu -r drun",
+        "on-click-right": "killall rmenu"
+    },
+    "custom/power":{
+        "format": "  ",
+        "on-click": "nwg-bar",
+        "on-click-right": "killall nwg-bar"
+    },
+    "custom/layout":{
+        "format": "",
+        // "on-click": "bash ~/.config/system_scripts/layout.sh"
+    },
+    "custom/updater":{
+        "format": "  {} Updates",
+        "exec": "aptitude search '~U' | wc -l",
+        "exec-if": "[ $(aptitude search ~U | wc -l) -ne 0 ]",
+        "interval": 600,
+        "on-click": "alacritty -e 'sudo nala upgrade && sudo aptitude safe-upgrade'"
+    }
 }

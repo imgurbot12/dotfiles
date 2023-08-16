@@ -68,3 +68,42 @@ window#waybar {
   padding:          0.1rem 0.5rem 0.1rem 0.5rem;
 }
 
+/* modules */
+
+#clock,
+#battery,
+#cpu,
+#memory,
+#disk,
+#temperature,
+#backlight,
+#network,
+#pulseaudio,
+#custom-media,
+#custom-launcher,
+#custom-power,
+#custom-layout,
+#custom-updater,
+#custom-snip,
+#taskbar,
+#tray,
+#mode,
+#idle_inhibitor,
+#mpd {
+    padding: 0 4px;
+    color: #ffffff;
+}
+
+#custom-launcher,
+#custom-media,
+#custom-power {
+  font-size: 20px;
+}
+
+#idle_inhibitor {
+  margin-left: 5px;
+}
+
+#clock {
+  margin-right: 5px;
+}
