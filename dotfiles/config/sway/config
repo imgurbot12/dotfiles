@@ -1,10 +1,10 @@
 # Variables
 set $mod Mod4
 set $lock  ~/.config/sway/scripts/lock.sh
-set $power ~/.config/rofi/modi/power
-set $wifi rmenu -r network
-set $term alacritty
-set $menu rmenu -r run
+set $power rmenu -r powermenu
+set $wifi  rmenu -r network
+set $term  alacritty
+set $menu  rmenu -r run
 set $deskmenu   rmenu -r drun
 set $audiomenu  rmenu -r audio
 set $windowswap rmenu -r window

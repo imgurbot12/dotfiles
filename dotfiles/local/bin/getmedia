@@ -1,0 +1,19 @@
+#!/bin/sh
+
+getmedia() {
+  playerctl metadata | head -n 1 | awk '{print $1}'
+}
+
+case "$1" in
+  "json")
+    media=`getmedia`
+    printf '{"text": "%s",'    "$media"
+    printf ' "alt": "%s",'     "$media"
+    printf ' "tooltip": "%s",' "$media"
+    printf ' "class": "media",'
+    printf ' "percentage": 100}\n'
+    ;;
+  *)
+    getmedia
+    ;;
+esac

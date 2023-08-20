@@ -121,10 +121,12 @@
         "max-length": 15,
         "format-icons": {
             "spotify": "",
-            "default": ""
+            "default": "",
+            "rhythmbox": "ﰝ"
         },
         "escape": true,
-        // "exec": "$HOME/.config/system_scripts/mediaplayer.py 2> /dev/null",
+        "interval": 30,
+        "exec": "getmedia json",
         "on-click": "playerctl play-pause"
     },
     "custom/launcher":{
@@ -133,9 +135,9 @@
         "on-click-right": "killall rmenu"
     },
     "custom/power":{
-        "format": "  ",
-        "on-click": "nwg-bar",
-        "on-click-right": "killall nwg-bar"
+        "format": "",
+        "on-click": "rmenu -r powermenu"
+        // "on-click-right": "swaynag -m 'hello world!'"
     },
     "custom/layout":{
         "format": "",

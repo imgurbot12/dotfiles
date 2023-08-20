@@ -25,6 +25,7 @@ ensure_program playerctl || export doexit=1
 # copy sway related shell script programs
 log_info "installing binaries"
 copy_bin "lock"
+copy_bin "getmedia"
 
 # copy configurations linked to sway config
 log_info "installing configuration files"
