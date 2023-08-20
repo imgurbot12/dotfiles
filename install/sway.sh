@@ -16,6 +16,7 @@ ensure_program sway      || export doexit=1
 ensure_program swaylock  || export doexit=1
 ensure_program waybar    || export doexit=1
 ensure_program grim      || export doexit=1
+ensure_program slurp     || export doexit=1
 ensure_program dunst     || export doexit=1
 ensure_program redshift  || export doexit=1
 ensure_program pactl     || export doexit=1
