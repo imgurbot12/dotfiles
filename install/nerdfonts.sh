@@ -25,7 +25,7 @@ fi
 
 # ensure install-dir exists
 file_mkdir "-p $FONTSDIR"
-    
+ 
 # install fonts into fonts-directory
 dest="/tmp/nerdfonts.zip"
 log_info "installing nerd fonts to '$FONTSDIR'"
@@ -37,3 +37,11 @@ for font in $NERDFONTS; do
   unzip -qod $FONTSDIR $dest
   file_remove $dest
 done
+
+# install fontconfig
+log_info "installing custom font-config"
+copy_config "fontconfig"
+
+# update font-settings
+log_info "updating font cache"
+fc-cache -frv
