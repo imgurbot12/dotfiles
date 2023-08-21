@@ -166,8 +166,26 @@ return {
   plugins = {
     -- additional plugins
     { 'imgurbot12/essentials.nvim' },
+    { 'xiyaowong/transparent.nvim', lazy = false },
     { 'euclio/vim-markdown-composer', build = 'cargo build --release' },
     -- overrides
+    { 'rebelot/heirline.nvim', lazy = false },
     { 'akinsho/toggleterm.nvim', start_in_insert = true }
-  }
+  },
+  polish = function()
+    vim.defer_fn(function()
+      -- assign transparent groups for heirline
+      vim.g.transparent_groups = vim.list_extend(
+        vim.g.transparent_groups or {}, 
+        vim.tbl_map(
+          function(v) return v end,
+          vim.tbl_keys(require('heirline.highlights').get_highlights())))
+      -- assign transparent groups for neo-tree
+      vim.g.transparent_groups = vim.list_extend(
+        vim.g.transparent_groups or {}, 
+        vim.tbl_map(
+          function(v) return v end, 
+          vim.tbl_values(require('neo-tree.ui.highlights'))))
+    end, 100)
+  end
 }
