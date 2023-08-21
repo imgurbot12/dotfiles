@@ -2,6 +2,9 @@
 -- AstroNvim Custom Configuration
 --
 
+-- Stop LSP Bitching about global vim
+local vim = vim
+
 -- Variables --
 
 local WinUp     = '<cmd>wincmd k<CR>'
@@ -57,6 +60,22 @@ local function use(pkg, silent)
       end) 
   end
   return library
+end
+
+-- configure transparency for `xiyaowong/transparent.nvim` 
+local function set_transparency()
+  -- assign transparent groups for heirline
+  vim.g.transparent_groups = vim.list_extend(
+    vim.g.transparent_groups or {}, 
+    vim.tbl_map(
+      function(v) return v end,
+      vim.tbl_keys(require('heirline.highlights').get_highlights())))
+  -- assign transparent groups for neo-tree
+  vim.g.transparent_groups = vim.list_extend(
+    vim.g.transparent_groups or {}, 
+    vim.tbl_map(
+      function(v) return v end, 
+      vim.tbl_values(require('neo-tree.ui.highlights'))))
 end
 
 -- Function Wrappers --
@@ -173,19 +192,6 @@ return {
     { 'akinsho/toggleterm.nvim', start_in_insert = true }
   },
   polish = function()
-    vim.defer_fn(function()
-      -- assign transparent groups for heirline
-      vim.g.transparent_groups = vim.list_extend(
-        vim.g.transparent_groups or {}, 
-        vim.tbl_map(
-          function(v) return v end,
-          vim.tbl_keys(require('heirline.highlights').get_highlights())))
-      -- assign transparent groups for neo-tree
-      vim.g.transparent_groups = vim.list_extend(
-        vim.g.transparent_groups or {}, 
-        vim.tbl_map(
-          function(v) return v end, 
-          vim.tbl_values(require('neo-tree.ui.highlights'))))
-    end, 100)
+    vim.defer_fn(set_transparency, 100)
   end
 }
