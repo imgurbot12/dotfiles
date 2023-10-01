@@ -13,7 +13,9 @@ LOC_URL="https://ipinfo.io/"
 
 # ensure all required programs are installed
 ensure_program sway      || export doexit=1
+ensure_program swaybg    || export doexit=1
 ensure_program swaylock  || export doexit=1
+ensure_program swayidle  || export doexit=1
 ensure_program waybar    || export doexit=1
 ensure_program grim      || export doexit=1
 ensure_program slurp     || export doexit=1
