@@ -10,9 +10,10 @@ set $audiomenu  rmenu -r audio
 set $windowswap rmenu -r window
 set $screenshot grim ~/Pictures/Screenshots/scrn-$(date +"%Y-%m-%d-%H-%M-%S").png
 set $screenclip slurp | grim -g - ~/Pictures/Screenshots/scrn-$(date +"%Y-%m-%d-%H-%M-%S").png
-set $background ~/Pictures/anime-background2.png
+set $background /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
 
-set $cl_high #009ddc
+# set $cl_high #009ddc
+set $cl_high #b4befe
 set $cl_indi #d9d8d8
 set $cl_back #231f20
 set $cl_fore #d9d8d8
@@ -138,7 +139,7 @@ bindsym $mod+Home exec pkill -USR1 redshift
 exec swayidle \
     timeout 300 'exec $lock' \
     timeout 600 'swaymsg "output * dpms off"' \
-    after-resume 'swaymsg "output * dpms on"' \
+    resume      'swaymsg "output * dpms on"'  \
     before-sleep 'exec $lock'
 
 # Move your focus around
