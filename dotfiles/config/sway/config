@@ -8,8 +8,8 @@ set $menu  rmenu -r run
 set $deskmenu   rmenu -r drun
 set $audiomenu  rmenu -r audio
 set $windowswap rmenu -r window
-set $screenshot grim ~/Pictures/Screenshots/scrn-$(date +"%Y-%m-%d-%H-%M-%S").png
-set $screenclip slurp | grim -g - ~/Pictures/Screenshots/scrn-$(date +"%Y-%m-%d-%H-%M-%S").png
+set $screenshot grim -t png - | tee ~/Pictures/Screenshots/scrn-$(date +"%Y-%m-%d-%H-%M-%S").png | wl-copy
+set $screenclip slurp | grim -g - -t png - | tee ~/Pictures/Screenshots/scrn-$(date +"%Y-%m-%d-%H-%M-%S").png | wl-copy
 set $background /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
 
 # set $cl_high #009ddc
@@ -96,6 +96,11 @@ assign [app_id="rhythmbox"] $wsF12
 # Floating Modifiers
 for_window [app_id="pavucontrol"] floating enable
 for_window [app_id="pavucontrol"] border normal
+
+# Prevent Idle when Playing Youtube or Fullscreen
+for_window [title=".*YouTube.*"] inhibit_idle visible
+for_window [class=".*"] inhibit_idle fullscreen
+for_window [app_id=".*"] inhibit_idle fullscreen
 
 # Shortcuts
 bindsym $mod+Return exec $term
