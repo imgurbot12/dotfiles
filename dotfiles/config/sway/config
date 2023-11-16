@@ -12,6 +12,13 @@ set $screenshot grim -t png - | tee ~/Pictures/Screenshots/scrn-$(date +"%Y-%m-%
 set $screenclip slurp | grim -g - -t png - | tee ~/Pictures/Screenshots/scrn-$(date +"%Y-%m-%d-%H-%M-%S").png | wl-copy
 set $background /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
 
+# swayfx options
+blur enable
+blur_xray enable
+shadows enable
+default_dim_inactive 0.2
+corner_radius 3
+
 # set $cl_high #009ddc
 set $cl_high #b4befe
 set $cl_indi #d9d8d8
@@ -58,7 +65,7 @@ default_floating_border normal
 hide_edge_borders smart
 
 gaps inner 5
-gaps outer 5
+gaps outer 3
 
 # Allow Controlling Windows with Mouse
 floating_modifier $mod normal
