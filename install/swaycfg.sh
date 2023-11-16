@@ -9,21 +9,29 @@ IP_URL="ifconfig.me"
 #: api get to get aproximate geo-location from ip
 LOC_URL="https://ipinfo.io/"
 
+#: preferred installer program
+INSTALLER=$(has_binary nala && echo "nala" || echo "apt")
+
 #** Init **#
 
+# ensure misc packages
+ensure_program alacritty
+
 # ensure all required programs are installed
-ensure_program sway      || export doexit=1
-ensure_program swaybg    || export doexit=1
-ensure_program swaylock  || export doexit=1
-ensure_program swayidle  || export doexit=1
-ensure_program waybar    || export doexit=1
-ensure_program grim      || export doexit=1
-ensure_program slurp     || export doexit=1
-ensure_program dunst     || export doexit=1
-ensure_program redshift  || export doexit=1
-ensure_program pactl     || export doexit=1
-ensure_program playerctl || export doexit=1
-[ ! -z "$doexit" ] && exit 1
+log_info "installing required packages"
+sudo $INSTALLER update
+sudo $INSTALLER install -y \
+  sway \
+  swaybg \
+  swaylock \
+  swayidle \
+  waybar \
+  grim \
+  slurp \
+  dunst \
+  redshift \
+  pulseaudio-utils \
+  playerctl
 
 # copy sway related shell script programs
 log_info "installing binaries"
@@ -35,6 +43,7 @@ log_info "installing configuration files"
 copy_config "sway/."
 copy_config "waybar/."
 copy_config "dunst/."
+copy_config "alacritty/."
 
 # calcualte lattitude and longitude and generate config
 log_info "calculating lattitude/longitude"

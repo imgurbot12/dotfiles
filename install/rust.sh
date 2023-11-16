@@ -35,6 +35,9 @@ else
   curl -sSf $RUSTUP | bash
 fi
 
+# source cargo to allow for cargo-binstall straight after install
+. "$HOME/.cargo/env"
+
 # install cargo binstall utility
 if ! cargo binstall --help >/dev/null 2>&1; then
   log_info "installing cargo-binstall feature"
