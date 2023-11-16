@@ -27,7 +27,7 @@ INSTALLER=$(has_binary nala && echo "nala" || echo "apt")
 
 log_info "installing standard sway"
 sudo $INSTALLER update
-sudo $INSTALLER install sway
+sudo $INSTALLER install sway -y
 
 log_info "installing wayland build dependencies"
 sudo $INSTALLER install -y \
