@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# inspired by:
+# hyprland ubuntu build-guide: https://gist.github.com/Vertecedoc4545/3b077301299c20c5b9b4db00f4ca6000
+# sway build instructions: https://llandy3d.github.io/sway-on-ubuntu/simple_install/ 
+
 # stop program on any unhandled error
 set -e
 
