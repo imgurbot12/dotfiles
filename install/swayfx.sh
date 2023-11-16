@@ -1,5 +1,6 @@
 #!/bin/sh
 
+# stop program on any unhandled error
 set -e
 
 # import common-lib
@@ -20,13 +21,15 @@ LIBINPUT_GIT="https://gitlab.freedesktop.org/libinput/libinput.git"
 SWAYFX_GIT="https://github.com/WillPower3309/swayfx.git"
 
 BUILD_DIR="/tmp/sway-build"
-
 INSTALLER=$(has_binary nala && echo "nala" || echo "apt")
 
 #** Init **#
 
+log_info "installing standard sway"
+sudo $INSTALLER update
+sudo $INSTALLER install sway
+
 log_info "installing wayland build dependencies"
-# sudo $INSTALLER update
 sudo $INSTALLER install -y \
   build-essential \
   cmake \
@@ -91,7 +94,9 @@ sudo $INSTALLER install -y \
   libavcodec-dev \
   libavformat-dev \
   ninja-build \
-  meson
+  meson \
+  xwayland \
+  libgtk-3-dev
 
 log_info "installing libinput dependencies"
 sudo $INSTALLER install -y \
