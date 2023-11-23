@@ -152,6 +152,17 @@ confirm_yes () {
   done
 }
 
+#: desc => guess distrobution
+get_distro() {
+  if [ -f /etc/os-release ]; then
+    cat /etc/os-release | awk -F= '/^ID=/ {print $2}'
+  elif [ -f /etc/lsb-release ]; then
+    cat /etc/lsb-release | awk -F= '/ID=/ {print $2}'
+  elif has_binary lsb_release; then
+    lsb_release -si
+  fi
+}
+
 #** Init **#
 
 if whoami | grep -qE '^root$' && ! echo "$@" | grep -q '\-\-confirm'; then
