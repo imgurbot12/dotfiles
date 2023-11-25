@@ -15,9 +15,11 @@ set $background /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
 # swayfx options
 blur enable
 blur_xray enable
+blur_passes 1
 shadows enable
 default_dim_inactive 0.2
-corner_radius 3
+corner_radius 5
+# animation_duration 0.15
 
 # set $cl_high #009ddc
 set $cl_high #b4befe
@@ -33,10 +35,10 @@ client.unfocused        $cl_back $cl_back $cl_fore $cl_back $cl_back
 client.urgent           $cl_urge $cl_urge $cl_fore $cl_urge $cl_urge
 
 # workspaces
-set $ws1   1:
+set $ws1   1:
 set $ws2   2:
-set $ws3   3:3
-set $ws4   4:4
+set $ws3   3:
+set $ws4   4:ﱮ
 set $ws5   5:5
 set $ws6   6:6
 set $ws7   7:7
@@ -50,7 +52,7 @@ set $wsF4  14:14
 set $wsF5  15:15
 set $wsF6  16:16
 set $wsF7  17:17
-set $wsF8  18:
+set $wsF8  18:
 set $wsF9  19:19
 set $wsF10 20:20
 set $wsF11 21:
