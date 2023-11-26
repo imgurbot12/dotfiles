@@ -1,9 +1,12 @@
 
 #** Variables **#
 
+# set common editor to nvim
+set -x EDITOR nvim
+
 # basic path installations
 set -x GOROOT     "/usr/local/go"
-set -x GOPATH     "$HOME/Desktop/code/golang"
+set -x GOPATH     "$HOME/Code/golang"
 set -x CARGO_PATH "$HOME/.cargo"
 set -x PONY_PATH  "$HOME/.local/share/ponyup"
 set -x RTX_PATH   "$HOME/.local/share/rtx"
@@ -59,11 +62,10 @@ ensure_path "<builtin>" "$HOME/.local/bin"
 # ensure_omf "pyenv" "$PYENV_PATH" 
 
 # path => golang / rust (cargo) / pony / pyenv
-ensure_path "go"    "$GOROOT/bin"     "$GOPATH/bin"
+ensure_path "go"    "$GOPATH/bin"     "$GOROOT/bin"
 ensure_path "cargo" "$CARGO_PATH/bin"
 ensure_path "ponyc" "$PONY_PATH/bin"
 ensure_path "rtx"   "$RTX_PATH/bin"
-ensure_path "pyenv" "$PYENV_PATH/bin"
 
 # command aliases
 cmd_alias vi   "nvim"
