@@ -152,15 +152,40 @@ confirm_yes () {
   done
 }
 
+#: stolen from (https://unix.stackexchange.com/questions/6345/how-can-i-get-distribution-name-and-version-number-in-a-simple-shell-script)
+export_distro() {
+  if [ -f /etc/os-release ]; then
+      . /etc/os-release
+      OS=$NAME
+      VER=$VERSION_ID
+  elif type lsb_release >/dev/null 2>&1; then
+      OS=$(lsb_release -si)
+      VER=$(lsb_release -sr)
+  elif [ -f /etc/lsb-release ]; then
+      . /etc/lsb-release
+      OS=$DISTRIB_ID
+      VER=$DISTRIB_RELEASE
+  elif [ -f /etc/debian_version ]; then
+      OS=Debian
+      VER=$(cat /etc/debian_version)
+  else
+      OS=$(uname -s)
+      VER=$(uname -r)
+  fi
+  export OS
+  export VER
+}
+
 #: desc => guess distrobution
 get_distro() {
-  if [ -f /etc/os-release ]; then
-    cat /etc/os-release | awk -F= '/^ID=/ {print $2}'
-  elif [ -f /etc/lsb-release ]; then
-    cat /etc/lsb-release | awk -F= '/ID=/ {print $2}'
-  elif has_binary lsb_release; then
-    lsb_release -si
-  fi
+  [ -z "$OS" ] && export_distro
+  echo "$OS" | tr '[:upper:]' '[:lower:]'
+}
+
+#: desc => guess distrobution version
+get_distro_version() {
+  [ -z "$VER" ] && export_distro
+  echo "$VER" | tr '[:upper:]' '[:lower:]'
 }
 
 #** Init **#
