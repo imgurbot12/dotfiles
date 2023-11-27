@@ -10,16 +10,8 @@ config.enable_tab_bar = true
 config.hide_tab_bar_if_only_one_tab = true
 config.window_background_opacity = 0.75
 
-config.color_scheme = 'Builtin Dark'
-config.colors = {
-	foreground    = '#E3E3EA',
-	background    = '#000B1C',
-	cursor_bg     = '#FFFFFF',
-	cursor_fg     = '#000000',
-	cursor_border = '#7FD4FF',
-	selection_fg  = '#000000',
-	selection_bg  = '#99CCFF',
-}
+-- Custom Wallust ColorScheme
+config.color_scheme = 'Wallust'
 
 -- config.default_cursor_style  = 'BlinkingBar'
 -- config.cursor_blink_ease_in  = 'Constant'
@@ -27,26 +19,26 @@ config.colors = {
 
 config.keys = {
 	-- Navigation
-	{ key = "LeftArrow",  mods="CTRL", action=actions.ActivateTabRelative(-1)},
-	{ key = "RightArrow", mods="CTRL", action=actions.ActivateTabRelative(1)},
-	{ key = "PageUp",     mods="CTRL", action=actions.ScrollByPage(-1) },
-	{ key = "PageDown",   mods="CTRL", action=actions.ScrollByPage(1) },
-	{ key = "UpArrow",    mods="CTRL", action=actions.ScrollByLine(-1), },
-	{ key = "DownArrow",  mods="CTRL", action=actions.ScrollByLine(1), },
+	{ key = "LeftArrow",  mods="ALT", action=actions.ActivateTabRelative(-1)},
+	{ key = "RightArrow", mods="ALT", action=actions.ActivateTabRelative(1)},
+	{ key = "PageUp",     mods="ALT", action=actions.ScrollByPage(-1) },
+	{ key = "PageDown",   mods="ALT", action=actions.ScrollByPage(1) },
+	{ key = "UpArrow",    mods="ALT", action=actions.ScrollByLine(-1), },
+	{ key = "DownArrow",  mods="ALT", action=actions.ScrollByLine(1), },
 	-- Plane Controls
 	{
 		key    = "Escape",
-		mods   = "CTRL",
+		mods   = "ALT",
 		action = actions.CloseCurrentPane { confirm = true }
 	},
 	{ 
 		key  = "RightArrow", 
-		mods = "CTRL|SHIFT", 
+		mods = "ALT|SHIFT",
 		action=actions.SplitHorizontal{ domain = 'CurrentPaneDomain' }
 	},
 	{
 		key    = "DownArrow",
-		mods   = "CTRL|SHIFT",
+		mods   = "ALT|SHIFT",
 		action = actions.SplitVertical{ domain = 'CurrentPaneDomain' }
 	}
 }

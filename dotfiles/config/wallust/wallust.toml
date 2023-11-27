@@ -1,0 +1,24 @@
+# wallust 2.7.*
+backend     = "fastresize"
+color_space = "labfast"
+filter      = "dark16"
+threshold   = 25
+
+[[entry]]
+template = "wezterm-colors.toml"
+target   = "~/.config/wezterm/colors/Wallust.toml"
+
+# [[entry]]
+# # a relative path to a file where wallust.toml is (~/.config/wallust/)
+# template = "dunstrc"
+#
+# # absolute path to the file to write the template (after templating)
+# target = "~/.config/dunst/dunstrc"
+#
+# [[entry]]
+# template = "zathurarc"
+# target = "~/.config/zathura/zathurarc"
+#
+# [[entry]]
+# template = "glava_bars"
+# target = "~/.config/glava/bars.glsl"

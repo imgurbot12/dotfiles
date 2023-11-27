@@ -132,6 +132,17 @@ ensure_binstall() {
   fi
 }
 
+#: desc  => install binary via cargo (if not already installed)
+#: usage => $binary $program-name
+binstall() {
+  binary="$1"
+  program="${2:-$1}"
+  if has_binary $binary; then
+    log_info "$program is already installed. attempting update..."
+  fi
+  cargo binstall $program -y
+}
+
 #: desc  => get version of requested binary if it exists
 #: usage => $binary
 get_version () {
