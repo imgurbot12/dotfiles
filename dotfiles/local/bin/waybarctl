@@ -1,0 +1,85 @@
+#!/bin/sh
+
+#
+# Swap Waybar Colors/Configs with Ease
+#
+
+#** Variables **#
+
+#: root directory for waybar configs
+ROOT="$HOME/.config/waybar"
+
+#: colors subdir for storing color options
+COLORS_DIR="$ROOT/colors"
+
+#: themes directory for storing all possible themes
+THEMES_DIR="$ROOT/themes"
+
+#: final waybar color css location
+COLOR_PATH="$ROOT/colors.css"
+
+#: final waybar style css location
+STYLE_PATH="$ROOT/style.css"
+
+#: final waybar config location
+CONFIG_PATH="$ROOT/config.jsonc"
+
+#** Functions **#
+
+#: restart waybar
+restart() {
+  cd "$ROOT"
+  nohup ./waybar.sh &
+}
+
+#: desc => check if color exists
+not_color() {
+  [ ! -f "$COLORS_DIR/$1.css" ] && return 0 || return 1
+}
+
+#: desc => check if theme exists
+not_theme() {
+  [ ! -f "$THEMES_DIR/$1.jsonc" ] && return 0 || return 1
+}
+
+#: desc => list available colors
+list_colors() {
+  ls "$COLORS_DIR" | awk -F. '/.css$/ {print NR ". " $1}'
+}
+
+#: desc => list available themes
+list_themes() {
+  ls "$THEMES_DIR" | grep -E '.jsonc$' | awk -F. '{print NR ". " $1}'
+}
+
+#: desc => update waybar color pallete
+set_color() {
+  [ -z "$1" ] && echo "usage: $(basename $0) set-color <color>" && exit 1
+  not_color "$1" && echo "invalid color: $1" && exit 1
+  rm -vf "$COLOR_PATH"
+  ln -s "$COLORS_DIR/$1.css" "$COLOR_PATH"
+  restart
+}
+
+#: desc => update waybar theme
+set_theme() {
+  [ -z "$1" ] && echo "usage: $(basename $0) set-theme <color>" && exit 1
+  not_theme "$1" && echo "invalid theme: $1" && exit 1
+  rm -vf "$STYLE_PATH" "$CONFIG_PATH"
+  ln -s "$THEMES_DIR/$1.css" "$STYLE_PATH"
+  ln -s "$THEMES_DIR/$1.jsonc" "$CONFIG_PATH"
+  restart
+}
+
+#** Init **#
+
+case "$1" in
+  "lc"|"list-colors") list_colors    ;;
+  "lt"|"list-themes") list_themes    ;;
+  "sc"|"set-color")   set_color "$2" ;;
+  "st"|"set-theme")   set_theme "$2" ;;
+  *)
+    echo "invalid command. try <list-colors/list-themes/set-color/set-theme>"
+    exit 1
+    ;;
+esac

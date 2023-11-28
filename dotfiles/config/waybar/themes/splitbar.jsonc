@@ -1,0 +1,98 @@
+{
+  "layer": "top",
+  "modules-left": ["custom/packages", "sway/workspaces", "sway/window"],
+  "modules-center": [],
+  "modules-right": [
+    "tray",
+    "network",
+    "pulseaudio",
+    // "backlight",
+    // "battery",
+    "clock"
+  ],
+  "sway/workspaces": {
+    "disable-scroll": true,
+    "all-outputs": true,
+    "format": " {name} "
+  },
+  "custom/packages": {
+    "format": "{icon}",
+    "return-type": "json",
+    "format-icons": {
+      "pending-updates": "",
+      "updated": ""
+    },
+    "exec-if": "which waybar-updates",
+    "exec": "waybar-updates",
+    "on-click": "rmenu -r run",
+    "on-click-right": "rmenu -r drun"
+  },
+  "sway/window": {
+    "format": "{title}"
+  },
+  "tray": {
+    "spacing": 10
+  },
+  "clock": {
+    // "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+    "format-alt": "{:%Y-%m-%d}"
+  },
+  "backlight": {
+    "format": "{percent}% {icon}",
+    "format-icons": ["", "", "", "", "", "", "", "", ""]
+  },
+  "battery": {
+    "states": {
+      "good": 95,
+      "normal": 60,
+      "warning": 30,
+      "critical": 15
+    },
+    "format": "{capacity}% {icon}",
+    "format-charging": "{capacity}% ",
+    "format-plugged": "{capacity}% ",
+    "format-icons": ["", "", "", "", ""]
+  },
+  "network": {
+    "format": "Loading",
+    "format-wifi": "{essid} ({signalStrength}%) ",
+    "format-ethernet": "{ipaddr}/{cidr} ",
+    "tooltip-format": "{ifname} via {gwaddr} ",
+    "format-linked": "{ifname} (No IP) ",
+    "format-disconnected": "Disconnected ",
+    "format-alt": "{ifname}: {ipaddr}/{cidr}",
+    "on-click-right": "rmenu -r network"
+  },
+  "pulseaudio": {
+    "format": "{volume}% {icon} {format_source}",
+    "format-bluetooth": "{volume}% {icon} {format_source}",
+    "format-bluetooth-muted": "ﱝ {icon} {format_source}",
+    "format-muted": "<span size='x-large' rise='-1000'>ﱝ</span> {format_source}",
+    "format-source": " {volume}% ",
+    "format-source-muted": "",
+    "format-icons": {
+      "headphone": "",
+      "hands-free": "",
+      "headset": "",
+      "phone": "",
+      "portable": "",
+      "car": "",
+      "mute": "󰸈",
+      "default": ["", "", ""]
+    },
+    "on-click": "pavucontrol",
+    "on-click-right": "rmenu -r audio"
+  },
+  "custom/pipewire": {
+    "exec": "pw-volume status",
+    "return-type": "json",
+    "interval": "once",
+    "signal": 8,
+    "format": "<span size='x-large' rise='-1000'>{icon}</span> {percentage}",
+    "format-icons": {
+      "mute": "ﱝ",
+      "default": ["", "", ""]
+    },
+    "on-click": "pavucontrol"
+  }
+}

@@ -1,0 +1,132 @@
+@import "colors.css";
+
+* {
+  min-height: 0;
+  margin: 0;
+  padding: 0;
+  border-radius: 0;
+  font-family: "Mono", "Nerd Fond";
+  font-size: 12px;
+  padding-bottom: 1px;
+}
+
+tooltip {
+  background: @base;
+  border-radius: 7px;
+  border: 2px solid @border;
+}
+
+window#waybar {
+  background-color: transparent;
+  color: @text;
+}
+
+#custom-packages {
+  margin: 5px 0px 0px 5px;
+  padding: 0 10px;
+  background-color: @base;
+  color: @text;
+  border-radius: 7px;
+  font-size: 22px;
+}
+
+#window {
+	margin: 5px 0px 0px 5px;
+	padding-left: 10px;
+	padding-right: 10px;
+	border-radius: 7px;
+	background-color: @base;
+	color: @text;
+}
+window#waybar.empty #window {
+  background-color: transparent;
+}
+
+#workspaces {
+  margin: 5px;
+  margin-bottom: 0px;
+	border-radius: 7px;
+	background-color: @base;
+}
+#workspaces * {
+  font-size: 18px;
+}
+#workspaces button {
+	background-color: @base;
+	color: @text;
+}
+#workspaces button:first-child {
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
+}
+#workspaces button:last-child {
+  margin-right: 0px;
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
+}
+#workspaces button:hover {
+  background-color: @surface0;
+}
+#workspaces button.active {
+  background-color: @surface1;
+}
+#workspaces button.focused {
+	background-color: @surface2;
+}
+
+#network.linked {
+  color: @text;
+}
+#network.disconnected,
+#network.disabled {
+  color: @text;
+}
+
+#tray,
+#network,
+#pulseaudio,
+#cpu,
+#memory,
+#temperature,
+#backlight,
+#battery,
+#custom-pipewire {
+  margin: 5px 0px 0px 0;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 7px;
+  color: @text;
+  background-color: @base;
+}
+
+#pulseaudio,
+#backlight,
+#battery,
+#custom-pipewire {
+	margin-left: 0px;
+	margin-right: 0px;
+	border-radius: 0px;
+}
+
+#tray {
+  margin-right: 10px;
+}
+
+#battery.good {
+	color: @green;
+}
+#battery.warning {
+	color: @maroon;
+}
+#battery.critical {
+	color: @red;
+}
+
+#clock {
+  margin: 5px 5px 0px 0px;
+  padding-left: 10px;
+  padding-right: 10px;
+  border-radius: 0px 7px 7px 0px;
+  color: @text;
+  background-color: @base;
+}

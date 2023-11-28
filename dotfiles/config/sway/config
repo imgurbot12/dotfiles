@@ -3,7 +3,7 @@ set $mod Mod4
 set $lock  ~/.config/sway/scripts/lock.sh
 set $power rmenu -r powermenu
 set $wifi  rmenu -r network
-set $term  alacritty
+set $term  wezterm
 set $menu  rmenu -r run
 set $deskmenu   rmenu -r drun
 set $audiomenu  rmenu -r audio
@@ -75,8 +75,12 @@ floating_modifier $mod normal
 # Autostart
 xwayland enable
 exec dunst
+exec /usr/local/bin/autotiling
 exec redshift -c ~/.config/redshift.conf
 # exec --no-startup-id libinput-gestures
+
+# Magic Fix for OBS Recording in Sway
+exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
 # Common Apps
 exec brave-browser

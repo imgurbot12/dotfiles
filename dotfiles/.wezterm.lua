@@ -19,8 +19,8 @@ config.color_scheme = 'Wallust'
 
 config.keys = {
 	-- Navigation
-	{ key = "LeftArrow",  mods="ALT", action=actions.ActivateTabRelative(-1)},
-	{ key = "RightArrow", mods="ALT", action=actions.ActivateTabRelative(1)},
+	{ key = "LeftArrow",  mods="CTRL|ALT", action=actions.ActivateTabRelative(-1)},
+	{ key = "RightArrow", mods="CTRL|ALT", action=actions.ActivateTabRelative(1)},
 	{ key = "PageUp",     mods="ALT", action=actions.ScrollByPage(-1) },
 	{ key = "PageDown",   mods="ALT", action=actions.ScrollByPage(1) },
 	{ key = "UpArrow",    mods="ALT", action=actions.ScrollByLine(-1), },
@@ -28,17 +28,17 @@ config.keys = {
 	-- Plane Controls
 	{
 		key    = "Escape",
-		mods   = "ALT",
+		mods   = "CTRL|ALT",
 		action = actions.CloseCurrentPane { confirm = true }
 	},
 	{ 
 		key  = "RightArrow", 
-		mods = "ALT|SHIFT",
+		mods = "SHIFT|ALT",
 		action=actions.SplitHorizontal{ domain = 'CurrentPaneDomain' }
 	},
 	{
 		key    = "DownArrow",
-		mods   = "ALT|SHIFT",
+		mods   = "SHIFT|ALT",
 		action = actions.SplitVertical{ domain = 'CurrentPaneDomain' }
 	}
 }

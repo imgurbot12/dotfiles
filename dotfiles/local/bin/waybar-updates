@@ -1,0 +1,81 @@
+#!/bin/sh
+
+#** Variables **#
+
+#: default update interval (5 minutes)
+DEFAULT_INTERVAL='300'
+
+#: global cache for package-manager to use
+MANAGER=""
+
+#: global cache for tooltop generation
+TOOLTIP=""
+
+#: global cache for number of updates
+UPDATES=""
+
+#** Functions **#
+
+#: desc => determine if update-checker should use apt
+has_apt() {
+  [ -f /usr/lib/update-notifier/apt-check ] && return 0 || return 1
+}
+
+#: desc => check for number of apt-upgrades with aptitude
+check_apt_updates() {
+  output=`/usr/lib/update-notifier/apt-check 2>&1`
+  updates=`echo "$output" | cut -d';' -f1`
+  security_updates=`echo "$output" | cut -d';' -f2`
+  export TOOLTIP="updates: $updates, security-updates: $security_updates"
+  export UPDATES=`expr $updates + $security_updates`
+}
+
+#: determine package manager
+get_package_system() {
+  has_apt && export MANAGER="apt" && found=1
+  [ -z "$found" ] && echo "no package-manager found!" && exit 1
+}
+
+#: desc  => check for updates using the specified package-sysetm
+check_updates() {
+  case "$MANAGER" in
+    "apt") check_apt_updates ;;
+    *)     
+      echo "invalid manager: $MANAGER"
+      exit 1 
+      ;;
+  esac
+}
+
+#: desc  => generate waybar json response
+#: usage => $text $alt $tooltip $class
+json() {
+  [ $# -ne 4 ] && echo "json: too few arguments" && exit 1
+  printf '{"text": "%s",'    "$1"
+  printf ' "alt": "%s",'    "$2"
+  printf ' "tooltip": "%s",'  "$3"
+  printf ' "class": "%s"}\n' "$4"
+}
+
+#** Init **#
+
+# determine package-manager to use
+get_package_system
+
+# start loop 
+while true; do
+  TOOLTIP=""
+  UPDATES=""
+  # check for updates
+  check_updates
+  # generate response
+  if [ "$UPDATES" -gt 0 ]; then
+    json "$UPDATES" "pending-updates" "$TOOLTIP" "pending-updates"
+  else
+    TOOLTIP=$(gettext "waybar-updates" "System is up to date")
+    json "" "updated" "$TOOLTIP" "updated"
+  fi
+  # sleep for wait period
+  sleep "$DEFAULT_INTERVAL"
+done
+

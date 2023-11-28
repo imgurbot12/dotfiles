@@ -1,0 +1,18 @@
+/*
+ *  Custom Blue Color Pallete
+ */
+
+@define-color base   #1E1E2E;
+@define-color mantle #1A1A28;
+@define-color crust  #161320;
+
+@define-color text #5CF;
+@define-color subtext0 #0af;
+
+@define-color surface0 #353543;
+@define-color surface1 #4b4b58;
+@define-color surface2 #62626d;
+
+@define-color green  #7f7;
+@define-color maroon #f77;
+@define-color red    #f00;

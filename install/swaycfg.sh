@@ -37,6 +37,8 @@ sudo $INSTALLER install -y \
 log_info "installing binaries"
 copy_bin "lock"
 copy_bin "getmedia"
+copy_bin "waybarctl"
+copy_bin "waybar-updates"
 
 # copy configurations linked to sway config
 log_info "installing configuration files"
