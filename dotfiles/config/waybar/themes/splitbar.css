@@ -94,7 +94,7 @@ window#waybar.empty #window {
   margin: 5px 0px 0px 0;
   padding-left: 10px;
   padding-right: 10px;
-  border-radius: 7px;
+  border-radius: 7px 0 0 7px;
   color: @text;
   background-color: @base;
 }
@@ -110,6 +110,7 @@ window#waybar.empty #window {
 
 #tray {
   margin-right: 10px;
+  border-radius: 7px;
 }
 
 #battery.good {
