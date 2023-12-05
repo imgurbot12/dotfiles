@@ -1,6 +1,6 @@
 # Variables
 set $mod        Mod4
-set $lock       ~/.config/sway/scripts/lock.sh
+set $lock       ~/.local/bin/lock
 set $player     ~/.local/bin/mediactl
 set $power      rmenu -r powermenu
 set $wifi       rmenu -r network
@@ -76,7 +76,7 @@ floating_modifier $mod normal
 # Autostart
 xwayland enable
 exec dunst
-exec playerctld daemon
+exec $player daemon
 exec redshift -c ~/.config/redshift.conf
 # exec --no-startup-id libinput-gestures
 

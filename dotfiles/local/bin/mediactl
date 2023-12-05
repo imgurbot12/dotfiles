@@ -66,6 +66,7 @@ Better MPRIS CLI Tool
 Usage: $(basename $0) [command] <flags>
   
 Commands:
+    daemon       activate dbus listener daemon
     play-pause   toggle play/pause button
     next         player skip to next track
     previous     player skip to previous track
@@ -99,6 +100,15 @@ _notify_track() {
   title="$PLAYER_TITLE"
   message="by $PLAYER_ARTIST from ${PLAYER_ALBUM:-'Unknown'}"
   notify-send -t $NOTIFY_DURATION -i "$icon" "$title" "$message"
+}
+
+#: desc => manage and restart playerctld daemon
+daemon() {
+  # kill existing playerctld, wait until gone
+  killall -q playerctld
+  while pgrep -x playerctld >/dev/null; do sleep 1; done
+  # spawn new daemon
+  playerctld daemon
 }
 
 #: desc => toggle play/pause button for current player
@@ -201,6 +211,7 @@ done
 
 # parse command actions
 case "$COMMAND" in
+  "daemon")          daemon          ;;
   "play-pause")      play_pause      ;;
   "next")            next_track      ;;
   "prev"|"previous") prev_track      ;;
