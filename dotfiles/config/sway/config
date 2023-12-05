@@ -87,7 +87,7 @@ exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DE
 exec brave-browser
 exec discord
 exec signal-desktop
-exec rhythmbox
+exec spotube || rhythmbox
 
 # Tray Applets
 exec warp-taskbar
@@ -109,6 +109,7 @@ assign [class="^Signal$"] $wsF1
 assign [class="^discord$"] $wsF1
 assign [class="^VirtualBox Manager"] $wsF8
 assign [app_id="virt-manager"] $wsF8
+assign [app_id="spotube"] $wsF12
 assign [app_id="rhythmbox"] $wsF12
 assign [app_id="^brave-browser$"] $ws2
 
@@ -145,8 +146,12 @@ bindsym $mod+n exec dunstctl close
 bindsym $mod+Shift+n exec dunstctl close-all
 
 # Multimedia
-bindsym --locked XF86AudioRaiseVolume exec $player set-volume +5%
-bindsym --locked XF86AudioLowerVolume exec $player set-volume -5%
+bindsym $mod+comma  exec $player set-volume -5
+bindsym $mod+period exec $player set-volume +5
+bindsym $mod+Shift+comma exec $player set-volume -1
+bindsym $mod+Shift+period exec $player set-volume +1
+bindsym --locked XF86AudioRaiseVolume exec $player set-volume +5
+bindsym --locked XF86AudioLowerVolume exec $player set-volume -5
 bindsym --locked XF86AudioMute exec $player toggle-mute
 bindsym --locked XF86AudioPlay exec $player play-pause
 bindsym --locked XF86AudioNext exec $player next
