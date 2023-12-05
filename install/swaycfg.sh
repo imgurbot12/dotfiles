@@ -61,6 +61,7 @@ log_info "generating redshift config w/ tz='$zone' lat='$lat', long='$long'"
 tee "$HOME/.config/redshift.conf" > /dev/null <<EOF
 [redshift]
 location-provider=manual
+gamma=0.8
 
 [manual]
 lat=$lat
