@@ -1,0 +1,217 @@
+#!/bin/sh
+
+#** Variables **#
+
+#: duration for notification
+NOTIFY_DURATION=2000
+
+#: default notify system
+NOTIFY="${NOTIFY:-yes}"
+
+#: players to avoid notifying for certain actions
+DONT_NOTIFY="rhythmbox"
+
+#** Functions **#
+
+#: desc  => parse metadata for particular field
+#: usage => $field
+_parse_meta() {
+  echo "$METADATA" | grep ":$1" | cut -d ' ' -f3- | sed -r 's/^( )+//g'
+}
+
+#: desc  => find longest match in lines from stdin
+#: usage => <command> | _longest
+_longest() {
+  cat /dev/stdin \
+    | awk '{ print length, $0 }' \
+    | sort -n \
+    | cut -d" " -f2- \
+    | tail -n 1
+}
+
+#: retrieve metadata if not already retrieved
+get_metadata() {
+  [ ! -z "$METADATA" ] && return 0
+  METADATA=`playerctl metadata`
+  export METADATA="$METADATA"
+  export PLAYER_NAME=`echo "$METADATA" | head -n 1 | awk '{print $1}'`
+  export PLAYER_TITLE=`_parse_meta 'title'`
+  export PLAYER_ALBUM=`_parse_meta 'album'`
+  export PLAYER_ARTIST=`_parse_meta 'artist'`
+}
+
+#: desc => retrieve icon based on player
+get_icon() {
+  # retrieve desktop file associated w/ player (find longest match)
+  dfile=$(locate .desktop | grep -i "$PLAYER_NAME" | _longest)
+  [ -z "$dfile" ] && return 1
+  # grab icon associated w/ desktop-file
+  icon=`cat "$dfile" | grep -E '^Icon=' | cut -d '=' -f2`
+  [ -z "$icon" ] && return 1
+  # check if icon is already path
+  if echo "$icon" | grep '/' 2>&1 >/dev/null; then
+    echo "$icon"
+    return 0
+  fi
+  # check for png icons
+  png=`locate "$icon.png" | _longest`
+  [ ! -z "$png" ] && echo "$png"
+}
+
+#: desc => display usage for program
+usage() {
+  cat << EOF 
+Better MPRIS CLI Tool
+
+Usage: $(basename $0) [command] <flags>
+  
+Commands:
+    play-pause   toggle play/pause button
+    next         player skip to next track
+    previous     player skip to previous track
+    shift        shift active player
+    unshift      shift active player in reverse order
+    get-volume   get current volue of pulseaudio sink
+    set-volume   update current volume (format: [+-](0-100)
+    toggle-mute  toggle mute of current pulseaudio sink
+Flags:
+    -h  display help menu
+    -n  disable dbus notification on updates
+EOF
+}
+
+#** Commands **#
+
+#: notify dbus on track change
+_notify_track() {
+  [ -z "$NOTIFY"  ] && return 0
+  # only notify when playing
+  get_metadata
+  status=`playerctl status`
+  [ "$(playerctl status)" = "Playing" ] || return 0
+  # skip notification if intentionally ignored
+  if echo "$PLAYER_NAME" | grep -E "$DONT_NOTIFY" 2>&1 >/dev/null; then
+    echo "WARN: skipping notification for player: $PLAYER_NAME"
+    return 0
+  fi
+  # send notification
+  icon=$(get_icon)
+  title="$PLAYER_TITLE"
+  message="by $PLAYER_ARTIST from ${PLAYER_ALBUM:-'Unknown'}"
+  notify-send -t $NOTIFY_DURATION -i "$icon" "$title" "$message"
+}
+
+#: desc => toggle play/pause button for current player
+play_pause() {
+  playerctl --player playerctld play-pause
+  _notify_track
+}
+
+#: desc => tell system to move to next track
+next_track() {
+  playerctl --player playerctld next
+  _notify_track
+}
+
+#: desc => tell system to move to prev track
+prev_track() {
+  playerctl --player playerctld previous
+  _notify_track
+}
+
+#: desc => notify of shift in player focus (prev/next)
+_notify_shift() {
+  [ -z "$NOTIFY" ] && return 0
+  get_metadata
+  icon=$(get_icon)
+  title="Selected Player: $PLAYER_NAME"
+  message="playing $PLAYER_TITLE by $PLAYER_ARTIST"
+  notify-send -t $NOTIFY_DURATION -i "$icon" "$title" "$message"
+}
+
+#: desc => shift player focus to next
+player_shift() {
+  playerctld shift
+  _notify_shift
+}
+
+#: desc => shift player focus to previous
+player_unshift() {
+  playerctld unshift
+  _notify_shift
+}
+
+#: desc => retrieve active pacmd sink
+_get_sink() {
+  pacmd list-sinks | awk '/* index:/{print $3}'
+}
+
+#: desc => toggle mute for current sink
+toggle_mute() {
+  pactl set-sink-mute $(_get_sink) toggle
+}
+
+#: desc =>  display volume of active sink
+#: usage => <$sink> <$message>
+get_volume() {
+  message=${2:-"Current Volume: "}
+  sink=${1:-$(_get_sink)}
+  volume=$(pactl get-sink-volume $sink | grep -Eo '[0-9]+%' | head -n 1)
+  echo "$message$volume"
+}
+
+#: desc  => update current sink volume [+-][0-100]%
+#: usage => [+-]$volume
+set_volume() {
+  # confirm input is valid
+  if ! echo "$1" | grep -E '^[+-]?[0-9]{1,3}$' 2>&1 >/dev/null; then
+    echo "Invalid Volume Value: '$1'"
+    usage
+    exit 1
+  fi
+  sink=$(_get_sink)
+  get_volume $sink "Old Volume: "
+  pactl set-sink-volume $sink "$1%"
+  get_volume $sink "New Volume: "
+}
+
+#: desc => notify current player for waybar
+waybar_player() {
+    get_metadata
+    printf '{"text": "%s",'    "$PLAYER_NAME"
+    printf ' "alt": "%s",'     "$PLAYER_NAME"
+    printf ' "tooltip": "%s",' "$PLAYER_NAME"
+    printf ' "class": "media",'
+    printf ' "percentage": 100}\n'
+}
+
+#** Init **#
+
+# capture command from first argument
+COMMAND="$1"
+[ ! -z "$1" ] && shift
+
+# parse flags
+for arg in "$@"; do
+  case $arg in
+    -n)        export NOTIFY="" ;;
+    -h|--help) usage && exit 0  ;;
+  esac
+done
+
+# parse command actions
+case "$COMMAND" in
+  "play-pause")      play_pause      ;;
+  "next")            next_track      ;;
+  "prev"|"previous") prev_track      ;;
+  "shift")           player_shift    ;;
+  "unshift")         player_unshift  ;;
+  "toggle-mute")     toggle_mute     ;;
+  "get-volume")      get_volume      ;;
+  "set-volume")      set_volume "$1" ;;
+  "waybar-player")   waybar_player   ;;
+  *)
+    usage
+    exit 1
+    ;;
+esac

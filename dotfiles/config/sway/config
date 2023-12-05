@@ -1,10 +1,11 @@
 # Variables
-set $mod Mod4
-set $lock  ~/.config/sway/scripts/lock.sh
-set $power rmenu -r powermenu
-set $wifi  rmenu -r network
-set $term  wezterm
-set $menu  rmenu -r run
+set $mod        Mod4
+set $lock       ~/.config/sway/scripts/lock.sh
+set $player     ~/.local/bin/mediactl
+set $power      rmenu -r powermenu
+set $wifi       rmenu -r network
+set $term       wezterm
+set $menu       rmenu -r run
 set $deskmenu   rmenu -r drun
 set $audiomenu  rmenu -r audio
 set $windowswap rmenu -r window
@@ -144,12 +145,14 @@ bindsym $mod+n exec dunstctl close
 bindsym $mod+Shift+n exec dunstctl close-all
 
 # Multimedia
-bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume $(pacmd list-sinks |awk '/* index:/{print $3}') +5%
-bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume $(pacmd list-sinks |awk '/* index:/{print $3}') -5%
-bindsym --locked XF86AudioMute exec pactl set-sink-mute $(pacmd list-sinks |awk '/* index:/{print $3}') toggle
-bindsym --locked XF86AudioPlay exec playerctl --player playerctld play-pause
-bindsym --locked XF86AudioNext exec playerctl --player playerctld next
-bindsym --locked XF86AudioPrev exec playerctl --player playerctld previous
+bindsym --locked XF86AudioRaiseVolume exec $player set-volume +5%
+bindsym --locked XF86AudioLowerVolume exec $player set-volume -5%
+bindsym --locked XF86AudioMute exec $player toggle-mute
+bindsym --locked XF86AudioPlay exec $player play-pause
+bindsym --locked XF86AudioNext exec $player next
+bindsym --locked XF86AudioPrev exec $player previous
+bindsym --locked $mod+XF86AudioNext exec $player shift 
+bindsym --locked $mod+XF86AudioPrev exec $player unshift
 
 # Brightness controls
 bindsym --locked XF86MonBrightnessUp exec light -A 10

@@ -9,6 +9,7 @@ ensure_binstall
 
 log_info "installing shell utils"
 copy_bin "wifictl"
+copy_bin "mediactl"
 
 log_info "installing rust binaries"
 binstall bat

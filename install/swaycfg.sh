@@ -36,7 +36,7 @@ sudo $INSTALLER install -y \
 # copy sway related shell script programs
 log_info "installing binaries"
 copy_bin "lock"
-copy_bin "getmedia"
+copy_bin "mediactl"
 copy_bin "waybarctl"
 copy_bin "waybar-updates"
 
