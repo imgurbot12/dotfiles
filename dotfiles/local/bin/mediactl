@@ -153,7 +153,8 @@ player_unshift() {
 
 #: desc => retrieve active pacmd sink
 _get_sink() {
-  pacmd list-sinks | awk '/* index:/{print $3}'
+  default=`pactl get-default-sink`
+  pactl list sinks short | awk "/$default/ {print \$1}"
 }
 
 #: desc => toggle mute for current sink
