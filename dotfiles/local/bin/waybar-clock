@@ -1,0 +1,66 @@
+#!/bin/sh
+
+#
+# Waybar Clock Reimpl with Working Calendar Tooltip
+#
+
+#: exit on any non-explicitly handled error
+set -e
+
+#** Variables **#
+
+DEFAULT_FMT="%H:%M"
+DEFAULT_ALT="%Y-%m-%d"
+
+#** Functions **#
+
+#: desc => run clock loop and handle incoming singals
+run_clock() {
+  fmt=${1:-$DEFAULT_FMT}
+  alt=${2:-$DEFAULT_ALT}
+  trap 'update_alt' 'RTMIN+2' 
+  export calendar=`cal | sed 's/^/  /' | sed -z 's/\n/\\\n/g' | sed 's/\\\n$//g'`
+  while true; do
+    # print clock update
+    if [ -z "$USE_DATE_ALT" ]; then
+      clock=`date "+$fmt"`
+      class='main'
+    else
+      clock=`date "+$alt"`
+      class='alt'
+    fi
+    printf '{"text":"%s","class":"%s","tooltip":"%s"}\n' "$clock" "$class" "$calendar" 
+    # handle sleep
+    sleep 1 &
+    export SLEEP_PID=$!
+    wait $SLEEP_PID || true
+  done
+}
+
+#: toggle alternate design
+update_alt() {
+  [ -z "$USE_DATE_ALT" ] && export USE_DATE_ALT="y" || export USE_DATE_ALT=""
+  kill -TERM "${SLEEP_PID}" > /dev/null 2>&1 || true
+}
+
+#: desc => signal self to switch to alternate format
+signal_alt() {
+  pkill -RTMIN+2 $(basename $0)
+}
+
+#** Init **#
+
+case "$1" in
+  "clock")  
+    shift
+    run_clock $@ 
+    ;;
+  "signal") 
+    signal_alt
+    ;;
+  *) 
+    echo "usage: <clock/signal> <args...>"
+    exit 1
+    ;;
+esac
+

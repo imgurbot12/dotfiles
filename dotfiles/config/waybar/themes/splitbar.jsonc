@@ -8,13 +8,8 @@
     "pulseaudio",
     // "backlight",
     // "battery",
-    "clock"
+    "custom/clock"
   ],
-  "sway/workspaces": {
-    "disable-scroll": true,
-    "all-outputs": true,
-    "format": " {name} "
-  },
   "custom/packages": {
     "format": "{icon}",
     "return-type": "json",
@@ -27,6 +22,18 @@
     "on-click": "rmenu -r run",
     "on-click-right": "rmenu -r drun"
   },
+  "custom/clock": {
+    "format": "{}",
+    "return-type": "json",
+    "exec-if": "which waybar-clock",
+    "exec": "waybar-clock clock",
+    "on-click": "waybar-clock signal"
+  },
+  "sway/workspaces": {
+    "disable-scroll": true,
+    "all-outputs": true,
+    "format": " {name} "
+  },
   "sway/window": {
     "format": "{title}"
   },
@@ -34,7 +41,7 @@
     "spacing": 10
   },
   "clock": {
-    // "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+    // "tooltip-format": "<tt><small>{calendar}</small></tt>",
     "format-alt": "{:%Y-%m-%d}"
   },
   "backlight": {

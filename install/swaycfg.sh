@@ -31,13 +31,15 @@ sudo $INSTALLER install -y \
   dunst \
   redshift \
   pulseaudio-utils \
-  playerctl
+  playerctl \
+  ncal
 
 # copy sway related shell script programs
 log_info "installing binaries"
 copy_bin "lock"
 copy_bin "mediactl"
 copy_bin "waybarctl"
+copy_bin "waybar-clock"
 copy_bin "waybar-updates"
 
 # copy configurations linked to sway config
