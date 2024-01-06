@@ -1,15 +1,27 @@
 {
   "layer": "top",
-  "modules-left": ["custom/packages", "sway/workspaces", "sway/window"],
+  "modules-left": [
+    "custom/packages", 
+    "sway/workspaces",
+    // "idle_inhibitor",
+    "sway/window"
+  ],
   "modules-center": [],
   "modules-right": [
     "tray",
     "network",
     "pulseaudio",
-    // "backlight",
-    // "battery",
+    "backlight",
+    "battery",
     "custom/clock"
   ],
+  "idle_inhibitor": {
+    "format": "{icon}",
+    "format-icons": {
+      "activated": "",
+      "deactivated": ""
+    }
+  },
   "custom/packages": {
     "format": "{icon}",
     "return-type": "json",
