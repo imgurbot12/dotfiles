@@ -169,6 +169,10 @@ keymap('n', '<A-m>', MardownPreview, { desc = 'Open Markdown Preview' })
 keymap('n', '<A-s>', SessionSave,    { desc = 'Save Current Session' })
 keymap('n', '<A-l>', SessionLoad,    { desc = 'Load Previous Session' })
 
+-- NeoVide Settings --
+
+vim.g.neovide_transparency = 0.75
+
 -- AstroNvim Config --
 
 return {

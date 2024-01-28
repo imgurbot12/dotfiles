@@ -6,7 +6,7 @@
 #** Variables **#
 
 #: download link for neovide download
-NEOVIDE="https://github.com/neovide/neovide/releases/latest/download/neovide.tar.gz"
+NEOVIDE="https://github.com/neovide/neovide/releases/latest/download/neovide-linux-x86_64.tar.gz"
 
 #** Init **#
 
@@ -21,7 +21,7 @@ if [ ! -f $target ]; then
   fi
   # unpackage bundle
   if [ ! -f "$target" ]; then
-    /bin/sh -c "cd /tmp/ && tar xvf $bundle" >/dev/null 2>&1
+    /bin/sh -c "cd /tmp/ && tar xvf $bundle" >/dev/null 2>&1 || true
   fi
   if [ ! -f "$target" ]; then
     log_error "unable to locate neovide binary after unbundling"
