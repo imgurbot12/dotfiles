@@ -191,11 +191,16 @@ return {
     { 'imgurbot12/essentials.nvim' },
     { 'xiyaowong/transparent.nvim', lazy = false },
     { 'euclio/vim-markdown-composer', build = 'cargo build --release' },
+    {
+      'AstroNvim/astrocommunity',
+      { import = 'astrocommunity.utility.noice-nvim' },
+    }, 
     -- overrides
     { 'rebelot/heirline.nvim', lazy = false },
     { 'akinsho/toggleterm.nvim', start_in_insert = true }
   },
   polish = function()
+    use('telescope').load_extension('noice')
     vim.defer_fn(set_transparency, 100)
   end
 }
