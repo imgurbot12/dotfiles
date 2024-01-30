@@ -10,11 +10,11 @@ if (-NOT($?)) {
 }
 
 Write-Host "[INFO]: installing rust binaries"
-# cargo binstall bat -y 
-# cargo binstall ripgrep -y 
-# cargo binstall fd-find -y 
-# cargo binstall du-dust -y 
-# cargo binstall git-delta -y 
+cargo binstall bat -y 
+cargo binstall ripgrep -y 
+cargo binstall fd-find -y 
+cargo binstall du-dust -y 
+cargo binstall git-delta -y 
 
 if ((Confirm "Do you want to install Rust Coreutils?") -eq 1) {
   Write-Host "[WARN]: skipping Coreutils install"

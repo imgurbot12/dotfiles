@@ -1,5 +1,5 @@
 #
-# Instlal Neovim w/ Powershell for Windows
+# Install Neovim w/ Powershell for Windows
 #
 
 # load common utilies
@@ -7,7 +7,7 @@
 
 #** Variables **#
 
-$INIT_FILE="$DOTFILES\config\nvim\lua\user\init.lua"
+$INIT_FILE="$LINUX_DOTFILES\config\nvim\lua\user\init.lua"
 
 $ASTRONVIM_URL="https://github.com/AstroNvim/AstroNvim"
 

@@ -4,8 +4,11 @@ $ErrorActionPreference = "Stop"
 
 #** Variables **#
 
-#: dotfiles directory
-$DOTFILES = "$PSScriptRoot\..\dotfiles"
+#: windows dotfiles directory
+$WIN_DOTFILES = "$PSScriptRoot\..\dotfiles"
+
+#: linux dotfiles directory
+$LINUX_DOTFILES = "$PSScriptRoot\..\..\dotfiles"
 
 #: patches directory
 $PATCHES = "$PSScriptRoot\..\patches"
