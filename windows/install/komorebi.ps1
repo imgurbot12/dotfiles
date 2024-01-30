@@ -22,9 +22,6 @@ $KEYBOARD_CONFIG="$WIN_DOTFILES\programs\powertoys\keyboard-manager.json"
 #: filepath to PowerToys KeyBoardManager active configuration
 $KEYBOARD_DEFAULT="$Env:USERPROFILE\AppData\Local\Microsoft\PowerToys\Keyboard Manager\default.json"
 
-#: filepath to PowerToys KeyBoardManager executable
-$KEYBOARD_BIN="C:\Program Files\PowerToys\KeyboardManagerEngine\PowerToys.KeyboardManagerEngine.exe"
-
 #** Init **#
 
 # ensure sudo package is instaled
@@ -59,6 +56,4 @@ $null = Get-AppxPackage Microsoft.XboxGamingOverlay | Remove-AppxPackage
 
 # installing keyboard configurations for PowerToys KeyBoardManager
 Write-Host "[INFO]: writing keyboard-manager configuration"
-$null = taskkill /F /IM PowerToys.KeyboardManagerEngine.exe
 Copy-Item -Path "$KEYBOARD_CONFIG" -Destination "$KEYBOARD_DEFAULT" -Force
-Start-Process -FilePath "$KEYBOARD_BIN"
