@@ -1,26 +1,63 @@
 {
   "$schema": "https://raw.githubusercontent.com/LGUG2Z/komorebi/master/schema.json",
   "app_specific_configuration_path": "$Env:USERPROFILE/.config/komorebi_applications.yaml",
-  "window_hiding_behaviour": "Cloak",
+  "resize_delta": 50,
+  "window_container_behaviour": "Create",
   "cross_monitor_move_behaviour": "Insert",
-  "alt_focus_hack": true,
+  "unmanaged_window_operation_behaviour": "Op",
+  "mouse_follows_focus": true,
+  "border_width": 10,
+  "active_window_border": true,
   "default_workspace_padding": 10,
   "default_container_padding": 10,
-  "active_window_border": true,
-  "active_window_border_colours": {
-    "single": { "r": 66, "g": 165, "b": 245 },
-    "stack": { "r": 256, "g": 165, "b": 66 },
-    "monocle": { "r": 255, "g": 51, "b": 153 }
-  },
   "monitors": [
     {
       "workspaces": [
-        { "name": "I", "layout": "BSP" },
-        { "name": "II", "layout": "VerticalStack" },
-        { "name": "III", "layout": "HorizontalStack" },
-        { "name": "IV", "layout": "UltrawideVerticalStack" },
-        { "name": "V", "layout": "Rows" }
+        { "name": "code", "layout": "BSP" },
+        { 
+          "name":   "web", 
+          "layout": "UltrawideVerticalStack",
+          "initial_workspace_rules": [
+            {
+              "kind": "Exe",
+              "id": "brave.exe"
+            }
+          ]
+        },
+        { "name": "2", "layout": "BSP" },
+        { "name": "3", "layout": "BSP" },
+        { "name": "4", "layout": "BSP" },
+        { "name": "5", "layout": "BSP" },
+        { "name": "6", "layout": "BSP" },
+        { "name": "7", "layout": "BSP" },
+        { "name": "8", "layout": "BSP" },
+        { "name": "9", "layout": "BSP" },
+        {
+          "name": "chat",
+          "layout": "Rows",
+          "layout_rules": {},
+          "workspace_padding": 20,
+          "initial_workspace_rules": [
+            {
+              "kind": "Exe",
+              "id": "Discord.exe"
+            }
+          ]
+        },
+        { "name": "11", "layout": "BSP" },
+        { "name": "12", "layout": "BSP" },
+        { "name": "13", "layout": "BSP" },
+        { "name": "14", "layout": "BSP" },
+        { "name": "15", "layout": "BSP" },
+        { "name": "16", "layout": "BSP" },
+        { "name": "17", "layout": "BSP" },
+        { "name": "18", "layout": "BSP" },
+        { "name": "19", "layout": "BSP" },
+        { "name": "20", "layout": "BSP" },
+        { "name": "21", "layout": "BSP" }
       ]
     }
-  ]
+  ],
+  "alt_focus_hack": true,
+  "window_hiding_behaviour": "Cloak"
 }

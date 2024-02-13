@@ -9,7 +9,7 @@ param([String]$command='start')
 $CONFIG_DIR="$Env:USERPROFILE\.config"
 
 #: komorebi config source
-$KOMOREBI_CONFIG="$PSScriptRoot\..\dotfiles\config\komorebi.json"
+$KOMOREBI_CONFIG="$CONFIG_DIR\komorebi.json"
 
 #: filepath to PowerToys KeyBoardManager executable
 $KEYBOARD_BIN="C:\Program Files\PowerToys\KeyboardManagerEngine\PowerToys.KeyboardManagerEngine.exe"
@@ -32,7 +32,7 @@ function Start-Komorebi () {
 
   # ensure powertoys KeyboardManager is running
   Write-Host '[INFO]: starting keyboard-manager'
-  $manager = Get-Process PowerToys.KeyBoardManagerEngine
+  $manager = Get-Process PowerToys.KeyBoardManagerEngine -ErrorAction 'SilentlyContinue'
   if (!$manager) {
     echo 'actually started it'
     Start-Process -FilePath "$KEYBOARD_BIN"
