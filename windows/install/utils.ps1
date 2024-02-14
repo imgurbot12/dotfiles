@@ -1,10 +1,17 @@
+#
+# Install Various Shell Utilities
+# 
+
+# load common utilies
+. "$PSScriptRoot\_common.ps1"
 
 #** Init **#
 
 # ensure packages are installed
 Ensure-Pkg cargo rust
 $null = cargo binstall --help
-if (-NOT($?)) {
+if (-NOT($?))
+{
   Write-Error "[ERROR]: cargo-binstall not found."
   exit 2
 }
@@ -16,19 +23,21 @@ cargo binstall fd-find -y
 cargo binstall du-dust -y 
 cargo binstall git-delta -y 
 
-if ((Confirm "Do you want to install Rust Coreutils?") -eq 1) {
+if ((Confirm "Do you want to install Rust Coreutils?") -eq 1)
+{
   Write-Host "[WARN]: skipping Coreutils install"
   exit 0
 }
 
 # install coreutils
 Write-Host "[INFO]: cloning coreutils"
-if (-NOT(Test-Path coreutils)) {
+if (-NOT(Test-Path coreutils))
+{
   git clone https://github.com/uutils/coreutils
 }
 
 Write-Host "[INFO]: building coreutils"
-cd coreutils
+Set-Location coreutils
 cargo build --release --features windows
 
 Write-Host "[INFO]: installing coreutils"

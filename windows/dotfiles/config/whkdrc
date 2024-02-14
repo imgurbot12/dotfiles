@@ -9,6 +9,8 @@ alt + shift + c         : komorebic reload-configuration
 # The apps will be focused if open, or launched if not open
 # alt + f                 : if ($wshell.AppActivate('Firefox') -eq $False) { start firefox }
 alt + b                 : if ($wshell.AppActivate('Brave') -eq $False) { start brave }
+alt + p                 : start pwsh
+alt + f                 : Invoke-Item $env:USERPROFILE
 alt + return            : start powershell
 
 # Focus windows

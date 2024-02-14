@@ -2,20 +2,29 @@
   "$schema": "https://raw.githubusercontent.com/LGUG2Z/komorebi/master/schema.json",
   "app_specific_configuration_path": "$Env:USERPROFILE/.config/komorebi_applications.yaml",
   "resize_delta": 50,
+  "window_hiding_behaviour": "Cloak",
   "window_container_behaviour": "Create",
   "cross_monitor_move_behaviour": "Insert",
   "unmanaged_window_operation_behaviour": "Op",
-  "mouse_follows_focus": true,
-  "border_width": 10,
+  "border_width": 5,
   "active_window_border": true,
   "default_workspace_padding": 10,
   "default_container_padding": 10,
+  "alt_focus_hack": true,
+  "focus_follows_mouse": "Komorebi",
+  "float_rules": [
+    {
+      "kind": "Exe",
+      "id": "yasb.exe",
+      "matching_strategy": "Equals"
+    }
+  ],
   "monitors": [
     {
       "workspaces": [
-        { "name": "code", "layout": "BSP" },
+        { "name": "", "layout": "BSP" },
         { 
-          "name":   "web", 
+          "name":   "", 
           "layout": "UltrawideVerticalStack",
           "initial_workspace_rules": [
             {
@@ -33,7 +42,7 @@
         { "name": "8", "layout": "BSP" },
         { "name": "9", "layout": "BSP" },
         {
-          "name": "chat",
+          "name": "󰙯",
           "layout": "Rows",
           "layout_rules": {},
           "workspace_padding": 20,
@@ -53,11 +62,18 @@
         { "name": "17", "layout": "BSP" },
         { "name": "18", "layout": "BSP" },
         { "name": "19", "layout": "BSP" },
-        { "name": "20", "layout": "BSP" },
+        { 
+          "name": "", 
+          "layout": "BSP",
+          "initial_workspace_rules": [
+            {
+              "kind": "Exe",
+              "id": "steamwebhelper.exe"
+            }
+          ]
+        },
         { "name": "21", "layout": "BSP" }
       ]
     }
-  ],
-  "alt_focus_hack": true,
-  "window_hiding_behaviour": "Cloak"
+  ]
 }

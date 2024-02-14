@@ -24,6 +24,9 @@ $KEYBOARD_DEFAULT="$Env:USERPROFILE\AppData\Local\Microsoft\PowerToys\Keyboard M
 
 #** Init **#
 
+# ensure yasb is installed
+Ensure-Pkg yasb
+
 # ensure sudo package is instaled
 Write-Host '[INFO]: installing sudo tool'
 Scoop-Get sudo
