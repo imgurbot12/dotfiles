@@ -54,7 +54,6 @@ install_discord() {
 
 #** Init **#
 
-
 # check if discord is already installed
 if [ -f "$DISCORD_BUILD" ]; then
   update_discord

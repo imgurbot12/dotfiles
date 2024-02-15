@@ -118,6 +118,10 @@ local function term_toggle(direction)
   end
 end
 
+local function noice_dismiss()
+  use('noice').cmd('dismiss')
+end
+
 -- Additonal Mappings --
 
 -- Buffer Navigation
@@ -168,6 +172,7 @@ keymap('t', '<S-l>',     '<C-l>',          { desc = 'Clear Term Screen' })
 keymap('n', '<A-m>', MardownPreview, { desc = 'Open Markdown Preview' })
 keymap('n', '<A-s>', SessionSave,    { desc = 'Save Current Session' })
 keymap('n', '<A-l>', SessionLoad,    { desc = 'Load Previous Session' })
+keymap('n', '<BS>', noice_dismiss,   { desc = 'Dissmiss Noice Notifs' })
 
 -- NeoVide Settings --
 
