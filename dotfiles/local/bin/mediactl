@@ -157,9 +157,20 @@ _get_sink() {
   pactl list sinks short | awk "/$default/ {print \$1}"
 }
 
+#: desc => retrieve active pacmd source
+_get_source() {
+  default=`pactl get-default-source`
+  pactl list sources short | awk "/$default/ {print \$1}"
+}
+
 #: desc => toggle mute for current sink
 toggle_mute() {
   pactl set-sink-mute $(_get_sink) toggle
+}
+
+#: desc => toggle mute for current mic
+toggle_mic_mute() {
+  pactl set-source-mute $(_get_source) toggle
 }
 
 #: desc =>  display volume of active sink
@@ -219,6 +230,7 @@ case "$COMMAND" in
   "shift")           player_shift    ;;
   "unshift")         player_unshift  ;;
   "toggle-mute")     toggle_mute     ;;
+  "toggle-mic")      toggle_mic_mute ;;
   "get-volume")      get_volume      ;;
   "set-volume")      set_volume "$1" ;;
   "waybar-player")   waybar_player   ;;

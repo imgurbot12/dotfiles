@@ -90,7 +90,7 @@ exec signal-desktop
 exec spotube || rhythmbox
 
 # Tray Applets
-exec warp-taskbar
+exec sh -c 'killall warp-taskbar; warp-taskbar'
 exec blueman-applet
 
 # Input configuration
@@ -146,6 +146,7 @@ bindsym $mod+n exec dunstctl close
 bindsym $mod+Shift+n exec dunstctl close-all
 
 # Multimedia
+bindsym $mod+m      exec $player toggle-mic
 bindsym $mod+comma  exec $player set-volume -5
 bindsym $mod+period exec $player set-volume +5
 bindsym $mod+Shift+comma exec $player set-volume -1
@@ -268,7 +269,7 @@ mode "resize" {
     bindsym Return mode "default"
     bindsym Escape mode "default"
 }
-bindsym $mod+m mode "resize"
+bindsym $mod+shift+m mode "resize"
 
 set $mode_system System: (l) lock, (e) logout, (s) suspend, (r) reboot, (S) shutdown, (R) UEFI
 mode "$mode_system" {
