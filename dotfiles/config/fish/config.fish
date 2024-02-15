@@ -1,7 +1,6 @@
 
 #** Variables **#
 
-# set common editor to nvim
 set -x EDITOR nvim
 
 # basic path installations
@@ -53,6 +52,11 @@ end
 
 #** Init **#
 
+# custom keybinds
+# function fish_user_key_bindings
+#     bind \cl 'clear -x && echo "ayy lmao"'
+# end
+
 # bultin paths
 ensure_path "<builtin>" "$HOME/bin"
 ensure_path "<builtin>" "$HOME/.local/bin"
@@ -66,6 +70,7 @@ ensure_path "go"    "$GOPATH/bin"     "$GOROOT/bin"
 ensure_path "cargo" "$CARGO_PATH/bin"
 ensure_path "ponyc" "$PONY_PATH/bin"
 ensure_path "rtx"   "$RTX_PATH/bin"
+# ensure_path "pyenv" "$PYENV_PATH/bin"
 
 # command aliases
 cmd_alias vi   "nvim"
@@ -78,14 +83,18 @@ cmd_alias cat  "bat"
 cmd_alias find "fd"
 
 # clipboard aliases
+cmd_alias pbcopy  "wl-copy"
 cmd_alias pbcopy  "xsel"  "-ib"
 cmd_alias pbcopy  "xclip" "-selection c"
+cmd_alias pbcopy  "wl-copy"
 cmd_alias pbpaste "xsel"  "-ob"
 cmd_alias pbpaste "xclip" "-selection c -o" 
+cmd_alias pbpaste "wl-paste"
 
 # interactive startup
 if status is-interactive
   if command -sq neofetch; neofetch; end
   if command -sq starship; eval (starship init fish); end
   if command -sq rtx;      rtx activate -s fish | source; end
+  if command -sq zoxide;   zoxide init fish --cmd cd | source; end
 end

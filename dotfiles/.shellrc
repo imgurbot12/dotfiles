@@ -101,12 +101,15 @@ cmd_alias find "fd"
 # clipboard aliases
 cmd_alias pbcopy  "xsel"  "-ib"
 cmd_alias pbcopy  "xclip" "-selection c"
+cmd_alias pbcopy  "wl-copy"
 cmd_alias pbpaste "xsel"  "-ob"
 cmd_alias pbpaste "xclip" "-selection c -o"
+cmd_alias pbpaste "wl-paste"
 
 # interactive startup
 if [ ! -z "$PS1" ]; then
    ifc "neofetch" && neofetch
    ifc "starship" && eval "$(starship init bash)" 
-   ifc "rtx"      && eval "$(rtx activate -s bash)" 
+   ifc "rtx"      && eval "$(rtx activate -s bash)"
+   ifc "zoxide"   && eval "$(zoxide init bash --cmd cd)"
 fi

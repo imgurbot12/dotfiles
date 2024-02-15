@@ -17,3 +17,4 @@ binstall rg    ripgrep
 binstall fd    fd-find
 binstall dust  du-dust
 binstall delta git-delta
+binstall zoxide
