@@ -122,6 +122,12 @@ local function noice_dismiss()
   use('noice').cmd('dismiss')
 end
 
+local function custom_save()
+  require('notify')('saving file!')
+  use('whitespace-nvim').trim()
+  vim.cmd('write')
+end
+
 -- Additonal Mappings --
 
 -- Buffer Navigation
@@ -172,7 +178,15 @@ keymap('t', '<S-l>',     '<C-l>',          { desc = 'Clear Term Screen' })
 keymap('n', '<A-m>', MardownPreview, { desc = 'Open Markdown Preview' })
 keymap('n', '<A-s>', SessionSave,    { desc = 'Save Current Session' })
 keymap('n', '<A-l>', SessionLoad,    { desc = 'Load Previous Session' })
-keymap('n', '<BS>', noice_dismiss,   { desc = 'Dissmiss Noice Notifs' })
+keymap('n', '<BS>',  noice_dismiss,  { desc = 'Dissmiss Noice Notifs' })
+
+-- AstroNvim Overrides
+local mappings = {
+  ['n'] = {
+    ['<C-s>']  = { custom_save, desc = 'Save Current Buffer' },
+    ['<CS-s>'] = { custom_save, desc = 'Save Current Buffer #2' },
+  }
+}
 
 -- NeoVide Settings --
 
@@ -194,6 +208,7 @@ return {
   plugins = {
     -- additional plugins
     { 'imgurbot12/essentials.nvim' },
+    { 'johnfrankmorgan/whitespace.nvim' },
     { 'xiyaowong/transparent.nvim', lazy = false },
     { 'euclio/vim-markdown-composer', build = 'cargo build --release' },
     {
@@ -204,8 +219,10 @@ return {
     { 'rebelot/heirline.nvim', lazy = false },
     { 'akinsho/toggleterm.nvim', start_in_insert = true }
   },
+  mappings = mappings,
   polish = function()
     use('telescope').load_extension('noice')
+    use('whitespace-nvim').highlight()
     vim.defer_fn(set_transparency, 100)
   end
 }
