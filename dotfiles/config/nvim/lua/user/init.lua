@@ -16,14 +16,14 @@ local WinShrink = '<cmd>resize -2<CR>'
 
 local VertSplit  = '<cmd>vert sb<CR>'
 local VertGrow   = '<cmd>vertical resize +2<CR>'
-local VertShrink = '<cmd>vertical resize -2<CR>' 
+local VertShrink = '<cmd>vertical resize -2<CR>'
 
 local NextBuffer  = ']b'
 local PrevBuffer  = '[b'
 local CloseBuffer = '<cmd>bp<bar>sp<bar>bn<bar>bd<CR>'
 
 local MardownPreview = '<cmd>ComposerStart<CR>'
-local SessionSave    = '<cmd>SessionManager save_current_session<CR>' 
+local SessionSave    = '<cmd>SessionManager save_current_session<CR>'
 local SessionLoad    = '<cmd>SessionManager load_session<CR>'
 
 -- Functions --
@@ -42,39 +42,39 @@ local function new_mock(notify)
       if notify ~= nil then
         notify()
       end
-      return mock 
+      return mock
     end,
-  })  
+  })
   return mock
 end
 
 -- return module if found, else return mock object to take no action
 local function use(pkg, silent)
-  local library = nil 
+  local library = nil
   if not pcall(function() library = require(pkg) end) then
       return new_mock(function()
         require('notify')('not found!?')
         if not silent then
           require('notify')(string.format('module not found: %s', pkg), 'error')
         end
-      end) 
+      end)
   end
   return library
 end
 
--- configure transparency for `xiyaowong/transparent.nvim` 
+-- configure transparency for `xiyaowong/transparent.nvim`
 local function set_transparency()
   -- assign transparent groups for heirline
   vim.g.transparent_groups = vim.list_extend(
-    vim.g.transparent_groups or {}, 
+    vim.g.transparent_groups or {},
     vim.tbl_map(
       function(v) return v end,
       vim.tbl_keys(require('heirline.highlights').get_highlights())))
   -- assign transparent groups for neo-tree
   vim.g.transparent_groups = vim.list_extend(
-    vim.g.transparent_groups or {}, 
+    vim.g.transparent_groups or {},
     vim.tbl_map(
-      function(v) return v end, 
+      function(v) return v end,
       vim.tbl_values(require('neo-tree.ui.highlights'))))
 end
 
@@ -123,7 +123,6 @@ local function noice_dismiss()
 end
 
 local function custom_save()
-  require('notify')('saving file!')
   use('whitespace-nvim').trim()
   vim.cmd('write')
 end
@@ -214,7 +213,7 @@ return {
     {
       'AstroNvim/astrocommunity',
       { import = 'astrocommunity.utility.noice-nvim' },
-    }, 
+    },
     -- overrides
     { 'rebelot/heirline.nvim', lazy = false },
     { 'akinsho/toggleterm.nvim', start_in_insert = true }
