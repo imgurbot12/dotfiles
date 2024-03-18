@@ -30,67 +30,69 @@ window#waybar {
   font-size: 22px;
 }
 
-#idle_inhibitor {
+#window {
   margin: 5px 0px 0px 5px;
-  color: @text;
-  background-color: @base;
   padding-left: 10px;
   padding-right: 10px;
   border-radius: 7px;
+  background-color: @base;
+  color: @text;
 }
 
-#window {
-	margin: 5px 0px 0px 5px;
-	padding-left: 10px;
-	padding-right: 10px;
-	border-radius: 7px;
-	background-color: @base;
-	color: @text;
-}
 window#waybar.empty #window {
   background-color: transparent;
 }
 
 #workspaces {
-  margin: 5px 0px 0px 5px;
-	border-radius: 7px;
-	background-color: @base;
+  margin: 5px;
+  margin-bottom: 0px;
+  border-radius: 7px;
+  background-color: @base;
 }
+
 #workspaces * {
   font-size: 18px;
 }
+
 #workspaces button {
-	background-color: @base;
-	color: @text;
+  background-color: @base;
+  color: @text;
 }
+
 #workspaces button:first-child {
   border-top-left-radius: 7px;
   border-bottom-left-radius: 7px;
 }
+
 #workspaces button:last-child {
   margin-right: 0px;
   border-top-right-radius: 7px;
   border-bottom-right-radius: 7px;
 }
+
 #workspaces button:hover {
   background-color: @surface0;
 }
+
 #workspaces button.active {
   background-color: @surface1;
 }
+
 #workspaces button.focused {
-	background-color: @surface2;
+  background-color: @surface2;
 }
 
 #network.linked {
   color: @text;
 }
+
 #network.disconnected,
 #network.disabled {
   color: @text;
 }
 
 #tray,
+#cava,
 #network,
 #pulseaudio,
 #cpu,
@@ -111,24 +113,27 @@ window#waybar.empty #window {
 #backlight,
 #battery,
 #custom-pipewire {
-	margin-left: 0px;
-	margin-right: 0px;
-	border-radius: 0px;
+  margin-left: 0px;
+  margin-right: 0px;
+  border-radius: 0px;
 }
 
-#tray {
+#tray,
+#cava {
   margin-right: 10px;
   border-radius: 7px;
 }
 
 #battery.good {
-	color: @green;
+  color: @green;
 }
+
 #battery.warning {
-	color: @maroon;
+  color: @maroon;
 }
+
 #battery.critical {
-	color: @red;
+  color: @red;
 }
 
 #clock,
