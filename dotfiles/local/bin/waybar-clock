@@ -14,12 +14,18 @@ DEFAULT_ALT="%Y-%m-%d"
 
 #** Functions **#
 
+#: desc => generate calendar
+render_cal() {
+  day=`date +%e | sed "s/ //g"`
+  cal | sed "s/$day/<b>$day<\/b>/g"
+}
+
 #: desc => run clock loop and handle incoming singals
 run_clock() {
   fmt=${1:-$DEFAULT_FMT}
   alt=${2:-$DEFAULT_ALT}
-  trap 'update_alt' 'RTMIN+2' 
-  export calendar=`cal | sed 's/^/  /' | sed -z 's/\n/\\\n/g' | sed 's/\\\n$//g'`
+  trap 'update_alt' 'RTMIN+2'
+  export calendar=`render_cal | sed 's/^/  /' | sed -z 's/\n/\\\n/g' | sed 's/\\\n$//g'`
   while true; do
     # print clock update
     if [ -z "$USE_DATE_ALT" ]; then
@@ -29,7 +35,7 @@ run_clock() {
       clock=`date "+$alt"`
       class='alt'
     fi
-    printf '{"text":"%s","class":"%s","tooltip":"%s"}\n' "$clock" "$class" "$calendar" 
+    printf '{"text":"%s","class":"%s","tooltip":"%s"}\n' "$clock" "$class" "$calendar"
     # handle sleep
     sleep 1 &
     export SLEEP_PID=$!
@@ -51,14 +57,14 @@ signal_alt() {
 #** Init **#
 
 case "$1" in
-  "clock")  
+  "clock")
     shift
-    run_clock $@ 
+    run_clock $@
     ;;
-  "signal") 
+  "signal")
     signal_alt
     ;;
-  *) 
+  *)
     echo "usage: <clock/signal> <args...>"
     exit 1
     ;;
