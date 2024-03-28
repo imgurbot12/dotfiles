@@ -4,14 +4,29 @@
 
 #** Variables **#
 
-#: fastfetch version to install
-VERSION="2.2.3"
+#: repository for fastfetch
+FASTFETCH_REPO="fastfetch-cli/fastfetch"
 
-#: fastfetch source download link
-FASTFETCH_RAW="https://github.com/fastfetch-cli/fastfetch/archive/refs/tags/$VERSION.tar.gz"
+#** Functions **#
 
-#: fastfetch deb download
-FASTFETCH_DEB="https://github.com/fastfetch-cli/fastfetch/releases/download/2.2.3/fastfetch-$VERSION-Linux.deb"
+#: desc  => compare versions to confirm if install should happen
+#: usage => "$package_url"
+check_versions() {
+  # check if url was found
+  if [ -z "$1" ]; then
+    log_error 'failed to find release'
+    exit 1
+  fi
+  # compare versions
+  current=`get_version fastfetch`
+  latest=`get_github_version "$1"`
+  log_info " - current version: $current"
+  log_info " - latest version: $latest"
+  if [ "$current" = "$latest" ]; then
+    log_info "already up to date. skipping install."
+    exit 0
+  fi
+}
 
 #** Init **#
 
@@ -19,19 +34,23 @@ FASTFETCH_DEB="https://github.com/fastfetch-cli/fastfetch/releases/download/2.2.
 case "$(get_distro)" in
   "ubuntu"|"debian")
     log_info "debian-os detected. installing from .deb package"
-    curl -L "$FASTFETCH_DEB" -o /tmp/fastfetch.deb
+    url=`get_github_deb "$FASTFETCH_REPO"`
+    check_versions "$url"
+    curl -L "$url" -o /tmp/fastfetch.deb
     sudo dpkg -i /tmp/fastfetch.deb
     ;;
   *)
     log_info "unknown distro '$DISTRO'. installing from source"
     ensure_program cmake
+    url=`get_github_tarball "$FASTFETCH_REPO"`
+    check_versions "$url"
     mkdir -p /tmp/fastfetch && cd /tmp/fastfetch
-    curl -L "$FASTFETCH_RAW" -o fastfetch.tar.gz
+    curl -L "$url" -o fastfetch.tar.gz
     tar xvf fastfetch.tar.gz
-    cd "fastfetch-$VERSION"
+    cd */
     sh "./run.sh"
     sudo cp -vf ./build/fastfetch /usr/bin/.
-    ;; 
+    ;;
 esac
 
 # copy fastfetch configuration

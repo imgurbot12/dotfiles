@@ -7,7 +7,7 @@ set -e
 
 #** Variables **#
 
-#: loglevel configuration 
+#: loglevel configuration
 LOGLEVEL=${LOGLEVEL:-1}
 
 #: dirpath of self
@@ -69,7 +69,7 @@ file_remove () {
 }
 
 file_mkdir () {
-  file_do "mkdir" "$@" 
+  file_do "mkdir" "$@"
 }
 
 ### Copy Utilities
@@ -98,7 +98,7 @@ copy_config() {
 }
 
 #: desc  => copy file/directory tree into home dir
-#: usage => $path 
+#: usage => $path
 copy_home() {
   _copy "$DOTFILES" "$HOME" "$1"
 }
@@ -147,6 +147,55 @@ binstall() {
 #: usage => $binary
 get_version () {
   $1 --version | grep -oE '[0-9]\.([0-9]\.?)+' || true
+}
+
+#: desc => filter url results down to one
+#: usage => <urls> <arch>
+_filter_github_urls() {
+  url="$1"
+  if [ $(echo "$1" | wc -l) -gt 1 ]; then
+    url=$(echo "$1" | grep "$2" | head -n1)
+    [ -z "$url" ] && deb=$(echo "$1" | head -n1)
+  fi
+  echo "$url"
+}
+
+#: desc  => get latest debian pkg for specified github repo
+#: usage => "$user/repo"
+get_github_deb() {
+  source="https://api.github.com/repos/$1/releases/latest"
+  arch=$(dpkg --print-architecture)
+  debs=$(
+    curl -s $source \
+    | grep 'browser_download_url' \
+    | grep '.deb' \
+    | cut -d : -f 2,3 \
+    | tr -d \", \
+    | awk '{$1=$1; print $0}'
+  )
+  _filter_github_urls "$debs" "$arch"
+}
+
+#: desc  => get latest tarball for specified github repo
+#: usage => "$user/repo"
+get_github_tarball() {
+  source="https://api.github.com/repos/$1/releases/latest"
+  tarballs=$(
+    curl -s $source \
+    | grep 'tarball_url' \
+    | cut -d : -f 2,3 \
+    | tr -d \", \
+    | awk '{$1=$1; print $0}'
+  )
+  _filter_github_urls "$tarballs" "$arch"
+}
+
+#: desc  => retrieve latest github version from releases
+#: usage => "$tarball_url"
+get_github_version() {
+  latest=$(echo "$1" | grep -Eo '[0-9]+.[0-9]+.[0-9]+')
+  [ -z "$latest" ] && latest=$(basename "$1")
+  echo "$latest"
 }
 
 #: desc  => confirm 'y/Y' or return 1

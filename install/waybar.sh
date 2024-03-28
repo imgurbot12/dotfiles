@@ -10,8 +10,8 @@ set -e
 
 #** Variables **#
 
-#: api used to find waybar source
-WAYBAR_SRC="https://api.github.com/repos/Alexays/Waybar/releases/latest"
+#: github repo source for waybar
+WAYBAR_REPO="Alexays/Waybar"
 
 #: waybar build directory
 BUILD_DIR="/tmp/waybar"
@@ -28,17 +28,10 @@ INSTALLER=$(has_binary nala && echo "nala" || echo "apt")
 #: usage => download_source <force>
 download_source() {
   force="$1"
-  # get latest online version
-  URL=$(
-    curl -s $WAYBAR_SRC \
-    | grep 'tarball_url' \
-    | cut -d : -f 2,3 \
-    | tr -d \", \
-    | awk '{$1=$1; print $0}'
-  )
+  url=`get_github_tarball "$WAYBAR_REPO"`
   # compare installed version with online one
-  latest=$(echo "$URL" | grep -Eo '[0-9]+.[0-9]+.[0-9]+')
-  installed=$(get_version waybar)
+  latest=`get_github_version "$url"`
+  installed=`get_version waybar`
   log_info "latest version: $latest"
   log_info "installed version: $installed"
   if [ -z "$force" ] && [ "$latest" = "$installed" ]; then
@@ -48,7 +41,7 @@ download_source() {
   # download latest version
   log_info "downloading waybar $latest source from github"
   mkdir -p "$BUILD_DIR"
-  curl -L "$URL" -o "$BUILD_TAR"
+  curl -L "$url" -o "$BUILD_TAR"
 }
 
 #: desc => compile waybar from source and install
