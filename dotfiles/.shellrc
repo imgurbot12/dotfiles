@@ -1,6 +1,6 @@
 # POSIX ignostic shell rc to run on shell startup
 # source at the bottom of whatever shell you want to integrate
-# 
+#
 # Ex: echo '. "$HOME/rc.sh" >> .bashrc'
 
 #: desc  => pretty export w/ allowed spacing
@@ -20,7 +20,7 @@ var CARGO_PATH "$HOME/.cargo"
 var PONY_PATH  "$HOME/.local/share/ponyup"
 var PYENV_PATH "$HOME/.pyenv"
 var NVM_PATH   "$HOME/.nvm"
-var RTX_PATH   "$HOME/.local/share/rtx"
+var MISE_PATH  "$HOME/.local/share/mise"
 
 # neovide config items
 var NEOVIDE_MULTIGRID true
@@ -35,7 +35,7 @@ ifc () {
 }
 
 #: desc  => return 0 if given path exists but binary is not found
-#: usage => is_missing $binary $path 
+#: usage => is_missing $binary $path
 is_missing () {
     [ $# -lt 2 ]  && return 1
     ifc $1        && return 1
@@ -43,7 +43,7 @@ is_missing () {
     return 0
 }
 
-#: desc  => add the given path to bash-user-path variable 
+#: desc  => add the given path to bash-user-path variable
 #: usage => add_path $binary $path
 add_path () {
     [ $# -ne 2 ] && return 1
@@ -80,10 +80,10 @@ ensure_path "go"    "$GOROOT/bin"     "$GOPATH/bin"
 ensure_path "cargo" "$CARGO_PATH/bin"
 ensure_path "ponyc" "$PONY_PATH/bin"
 ensure_path "pyenv" "$PYENV_PATH/bin"
-ensure_path "rtx"   "$RTX_PATH/bin"
+ensure_path "mise"  "$MISE_PATH/bin"
 
 # init => pyenv / nvm
-ifc "pyenv" && eval "$(pyenv init -)" 
+ifc "pyenv" && eval "$(pyenv init -)"
 if [ -d "$NVM_PATH" ] && ! ifc "nvm"; then
     . "$NVM_PATH/nvm.sh"
 fi
@@ -109,7 +109,7 @@ cmd_alias pbpaste "wl-paste"
 # interactive startup
 if [ ! -z "$PS1" ]; then
    ifc "neofetch" && neofetch
-   ifc "starship" && eval "$(starship init bash)" 
-   ifc "rtx"      && eval "$(rtx activate -s bash)"
+   ifc "starship" && eval "$(starship init bash)"
+   ifc "mise"     && eval "$(mise activate -s bash)"
    ifc "zoxide"   && eval "$(zoxide init bash --cmd cd)"
 fi
