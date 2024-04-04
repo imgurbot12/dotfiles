@@ -17,7 +17,7 @@ DEFAULT_ALT="%Y-%m-%d"
 #: desc => generate calendar
 render_cal() {
   day=`date +%e | sed "s/ //g"`
-  cal | sed "s/$day/<b>$day<\/b>/g"
+  cal | sed "2,// s/$day/<b>$day<\/b>/g"
 }
 
 #: desc => run clock loop and handle incoming singals
