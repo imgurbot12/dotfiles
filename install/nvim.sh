@@ -14,16 +14,6 @@ NVIM_CFG="$HOME/.config/nvim"
 #: neovim downloadable appimage binary
 NVIM_BINARY="https://github.com/neovim/neovim/releases/latest/download/nvim.appimage"
 
-#: neovim package manager plugin
-NVIM_PACKER="https://github.com/wbthomason/packer.nvim"
-NVIM_PACKER_INSTALL="$HOME/.local/share/nvim/site/pack/packer/start/packer.nvim"
-
-#: astronvim repo and custom config directory
-ASTRONVIM="https://github.com/AstroNvim/AstroNvim"
-
-#: custom init file to install in astronvim folder
-INIT_FILE="nvim/lua/user/init.lua"
-
 #** Init **#
 
 # confirm if neovim should be updated/installed
@@ -42,12 +32,6 @@ if [ $install -eq 1 ]; then
   sudo chmod +x $BIN
 fi
 
-# clone and install packer
-if [ ! -d "$NVIM_PACKER_INSTALL" ]; then
-  log_info "cloning 'Packer' - Neovim Package Manager"
-  git clone $NVIM_PACKER $NVIM_PACKER_INSTALL
-fi
-
 # delete existing configuration if it exists
 cfg="$HOME/.local/share/nvim/"
 if [ -d "$NVIM_CFG" ]; then
@@ -57,18 +41,14 @@ if [ -d "$NVIM_CFG" ]; then
   fi
 fi
 
-# clone and push latest astronvim config if allowed
+# pushing latest config
 if [ ! -d "$NVIM_CFG" ]; then
-  # clone and install astronvim as nvim config
-  log_info "cloning 'AstroNvim' to '$NVIM_CFG'"
-  git clone $ASTRONVIM $NVIM_CFG
-  # installing custom user config into astronvim config
-  log_info "pushing user config for 'AstroNvim'"
-  copy_config $INIT_FILE
+  log_info "pushing neovim config"
+  copy_config "nvim/."
 fi
 
-# sync packer packages
-log_info "syncing 'AstroNvim' packages"
+# sync lazy packages
+log_info "syncing 'lazy.nvim' packages"
 nvim --headless "+Lazy! sync" +qa || true
 
 # notify on complete installation
