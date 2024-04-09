@@ -16,6 +16,7 @@ clamtk
 clamscan
 virtualbox
 VirtualBox
+steam
 "
 
 #** Init **#
