@@ -11,7 +11,7 @@ set $audiomenu  rmenu -r audio
 set $windowswap rmenu -r window
 set $screenshot grim -t png - | tee ~/Pictures/Screenshots/scrn-$(date +"%Y-%m-%d-%H-%M-%S").png | wl-copy
 set $screenclip slurp | grim -g - -t png - | tee ~/Pictures/Screenshots/scrn-$(date +"%Y-%m-%d-%H-%M-%S").png | wl-copy
-set $background ~/Pictures/Backgrounds/neon-world-7o-2560x1440_1692594065986.jpg
+set $background /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png
 
 # swayfx options
 blur enable
@@ -78,6 +78,7 @@ xwayland enable
 exec dunst
 exec $player daemon
 exec redshift -c ~/.config/redshift.conf
+exec libinput-gestures
 # exec --no-startup-id libinput-gestures
 
 # Magic Fix for OBS Recording in Sway
@@ -91,6 +92,7 @@ exec spotube || rhythmbox
 
 # Tray Applets
 exec sh -c 'killall warp-taskbar; warp-taskbar'
+exec nm-tray
 exec blueman-applet
 
 # Input configuration
@@ -115,6 +117,7 @@ assign [app_id="^brave-browser$"] $ws2
 assign [class="^steam.*$"] $wsF12
 
 # Floating Modifiers
+for_window [app_id="nm-tray"] floating enable, move position 860 -5
 for_window [app_id="pavucontrol"] floating enable
 for_window [app_id="pavucontrol"] border normal
 for_window [title="^(?!Steam).*" class="steam"] floating enable

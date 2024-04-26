@@ -48,6 +48,7 @@ copy_config "sway/."
 copy_config "waybar/."
 copy_config "dunst/."
 copy_config "alacritty/."
+copy_config "libinput-gestures.conf"
 
 # calcualte lattitude and longitude and generate config
 log_info "calculating lattitude/longitude"
@@ -58,7 +59,7 @@ zone=`echo "$data" | awk -F '"' '/timezone/ {print $4}'`
 lat=$(echo $loc | cut -d ',' -f1 | xargs printf "%.0f")
 long=$(echo $loc | cut -d ',' -f2 | xargs printf "%.0f")
 
-# generate redshift configuration w/ lattitude/longitude 
+# generate redshift configuration w/ lattitude/longitude
 log_info "generating redshift config w/ tz='$zone' lat='$lat', long='$long'"
 tee "$HOME/.config/redshift.conf" > /dev/null <<EOF
 [redshift]
