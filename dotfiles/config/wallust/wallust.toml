@@ -1,12 +1,12 @@
 # wallust 2.7.*
-backend     = "fastresize"
+backend     = "full"
 color_space = "labfast"
 filter      = "dark16"
 threshold   = 25
 
-[[entry]]
-template = "wezterm-colors.toml"
-target   = "~/.config/wezterm/colors/Wallust.toml"
+[templates]
+wezterm.template = "wezterm-colors.toml"
+wezterm.target   = "~/.config/wezterm/colors/Wallust.toml"
 
 # [[entry]]
 # # a relative path to a file where wallust.toml is (~/.config/wallust/)
