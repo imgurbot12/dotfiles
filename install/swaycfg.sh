@@ -15,7 +15,7 @@ INSTALLER=$(has_binary nala && echo "nala" || echo "apt")
 #** Init **#
 
 # ensure misc packages
-ensure_program alacritty
+# ensure_program alacritty
 
 # ensure all required programs are installed
 log_info "installing required packages"
@@ -28,7 +28,7 @@ sudo $INSTALLER install -y \
   waybar \
   grim \
   slurp \
-  dunst \
+  sway-notification-center \
   redshift \
   pulseaudio-utils \
   playerctl \
