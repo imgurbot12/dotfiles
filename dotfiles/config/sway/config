@@ -79,6 +79,7 @@ exec dunst
 exec $player daemon
 exec redshift -c ~/.config/redshift.conf
 exec libinput-gestures
+exec swayosd-server
 # exec --no-startup-id libinput-gestures
 
 # Magic Fix for OBS Recording in Sway
@@ -165,9 +166,16 @@ bindsym --locked XF86AudioPrev exec $player previous
 bindsym --locked $mod+XF86AudioNext exec $player shift
 bindsym --locked $mod+XF86AudioPrev exec $player unshift
 
-# Brightness controls
-bindsym --locked XF86MonBrightnessUp exec light -A 10
-bindsym --locked XF86MonBrightnessDown exec light -U 10
+# Addtional Controls
+bindsym --release Caps_Lock exec swayosd-client --caps-lock
+
+# Brightness Controls
+bindsym $mod+bracketright exec lightctl +5
+bindsym $mod+bracketleft exec lightctl -5
+bindsym $mod+Shift+bracketright exec lightctl +1
+bindsym $mod+Shift+bracketleft exec lightctl -1
+bindsym --locked XF86MonBrightnessUp exec lightctl +10
+bindsym --locked XF86MonBrightnessDown exec lightctl -10
 
 # Toggle Redshift
 bindsym $mod+Home exec pkill -USR1 redshift

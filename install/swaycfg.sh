@@ -37,6 +37,7 @@ sudo $INSTALLER install -y \
 # copy sway related shell script programs
 log_info "installing binaries"
 copy_bin "lock"
+copy_bin "lightctl"
 copy_bin "mediactl"
 copy_bin "waybarctl"
 copy_bin "waybar-clock"
@@ -70,3 +71,7 @@ brightness=0.7
 lat=$lat
 lon=$long
 EOF
+
+# update settings
+log_info "adding video permission to current user"
+sudo usermod -a -G video $USER

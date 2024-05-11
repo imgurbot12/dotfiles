@@ -1,0 +1,52 @@
+#!/bin/sh
+
+#** Variables **#
+
+#: desc  => get sign of value
+#: usage => $value
+get_sign() {
+  echo "$1" | grep -Eo '^[+-]'
+}
+
+#: desc  => clean value of signs and percentage
+#: usage => $value
+clean() {
+  echo "$2" | sed -e 's/%//g' -e 's/-//g' -e 's/+//g'
+}
+
+#: desc  => attempt to modify brightness with `light`
+#: usage => $sign $value
+set_light() {
+  case "$1" in
+    '-') light -U "$value" ;;
+    '+') light -A "$value" ;;
+    *)   light -S "$value" ;;
+  esac
+}
+
+#: desc  => attempt to modify brightness with `brightnessctl`
+#: usage => $sign $value
+set_brightnessctl() {
+  case "$1" in
+    '-') brightnessctl set "$2%-" ;;
+    '+') brightnessctl set "+$2%" ;;
+    *)   brightnessctl set "$2" ;;
+  esac
+}
+
+#: desc  => update current brightness [+-][0-100]%
+#: usage => [+-]$volume
+set_brightness() {
+  # try with swayosd
+  value=`echo "$1" | sed -e 's/%//g'`
+  swayosd-client --brightness "$value" >/dev/null 2>&1 && return 0
+  # backups of light/brightnessctl
+  sign=`get_sign "$1"`
+  value=`clean "$1"`
+  set_light "$sign" "$value" >/dev/null 2>&1 && return 0
+  set_brightnessctl "$sign" "$value" >/dev/null 2>&1 && return 0
+}
+
+#** Init **#
+
+set_brightness "$1"

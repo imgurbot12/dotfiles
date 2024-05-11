@@ -60,11 +60,11 @@ get_icon() {
 
 #: desc => display usage for program
 usage() {
-  cat << EOF 
+  cat << EOF
 Better MPRIS CLI Tool
 
 Usage: $(basename $0) [command] <flags>
-  
+
 Commands:
     daemon       activate dbus listener daemon
     play-pause   toggle play/pause button
@@ -75,6 +75,7 @@ Commands:
     get-volume   get current volue of pulseaudio sink
     set-volume   update current volume (format: [+-](0-100)
     toggle-mute  toggle mute of current pulseaudio sink
+    toggle-mic   toggle mute of current input sink
 Flags:
     -h  display help menu
     -n  disable dbus notification on updates
@@ -165,11 +166,13 @@ _get_source() {
 
 #: desc => toggle mute for current sink
 toggle_mute() {
+  swayosd-client --output-volume mute-toggle >/dev/null 2>&1 && return 0
   pactl set-sink-mute $(_get_sink) toggle
 }
 
 #: desc => toggle mute for current mic
 toggle_mic_mute() {
+  swayosd-client --input-volume mute-toggle >/dev/null 2>&1 && return 0
   pactl set-source-mute $(_get_source) toggle
 }
 
@@ -191,6 +194,9 @@ set_volume() {
     usage
     exit 1
   fi
+  # try using swayosd
+  swayosd-client --output-volume "$1" >/dev/null 2>&1 && return 0
+  # backup using pactl
   sink=$(_get_sink)
   get_volume $sink "Old Volume: "
   pactl set-sink-volume $sink "$1%"
