@@ -32,7 +32,8 @@ sudo $INSTALLER install -y \
   redshift \
   pulseaudio-utils \
   playerctl \
-  ncal
+  ncal \
+  imagemagick
 
 # copy sway related shell script programs
 log_info "installing binaries"
