@@ -75,19 +75,19 @@ floating_modifier $mod normal
 
 # Autostart
 xwayland enable
-exec dunst
+exec swaync || dunst
 exec $player daemon
 exec redshift -c ~/.config/redshift.conf
 exec libinput-gestures
-exec swayosd-server
 # exec --no-startup-id libinput-gestures
 
 # Magic Fix for OBS Recording in Sway
 exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
 
 # Common Apps
+exec wclipd daemon -k
 exec brave-browser
-exec discord
+exec vesktop || discord
 exec signal-desktop
 exec spotube || rhythmbox
 
@@ -110,6 +110,7 @@ output * bg $background fill
 assign [class="^Brave-browser$"] $ws2
 assign [class="^Signal$"] $wsF1
 assign [class="^discord$"] $wsF1
+assign [class="^vesktop$"] $wsF1
 assign [class="^VirtualBox Manager"] $wsF8
 assign [app_id="virt-manager"] $wsF8
 assign [app_id="spotube"] $wsF11
@@ -148,8 +149,8 @@ bindsym $mod+Escape exec $power
 bindsym $mod+End exec $wifi
 
 # Notifications
-bindsym $mod+n exec dunstctl close
-bindsym $mod+Shift+n exec dunstctl close-all
+bindsym $mod+n exec swaync-client --close-latest || dunstctl close
+bindsym $mod+Shift+n exec swaync-client --close-all || dunstctl close-all
 
 # Multimedia
 bindsym $mod+m      exec $player toggle-mic

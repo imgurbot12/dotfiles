@@ -137,11 +137,17 @@ window#waybar.empty #window {
 }
 
 #clock,
-#custom-clock {
+#custom-clock,
+#custom-notification {
   margin: 5px 5px 0px 0px;
   padding-left: 10px;
   padding-right: 10px;
   border-radius: 0px 7px 7px 0px;
   color: @text;
   background-color: @base;
+}
+
+#custom-notification {
+  font-size: 20px;
+  border-radius: 7px;
 }

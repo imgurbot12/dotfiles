@@ -9,7 +9,8 @@
     "pulseaudio",
     // "backlight",
     // "battery",
-    "custom/clock"
+    "custom/clock",
+    "custom/notification"
   ],
   "custom/packages": {
     "format": "{icon}",
@@ -29,6 +30,26 @@
     "exec-if": "which waybar-clock",
     "exec": "waybar-clock clock",
     "on-click": "waybar-clock signal"
+  },
+  "custom/notification": {
+    "tooltip": false,
+    "format": "{icon}",
+    "format-icons": {
+      "notification": "<span foreground='#d27979'></span>",
+      "none": "",
+      "dnd-notification": "<span foreground='red'></span>",
+      "dnd-none": "",
+      "inhibited-notification": "<span foreground='#d27979'></span>",
+      "inhibited-none": "",
+      "dnd-inhibited-notification": "<span foreground='#d27979'></span>",
+      "dnd-inhibited-none": ""
+    },
+    "return-type": "json",
+    "exec-if": "which swaync-client",
+    "exec": "swaync-client -swb",
+    "on-click": "swaync-client -t -sw",
+    "on-click-right": "swaync-client -d -sw",
+    "escape": true
   },
   "sway/workspaces": {
     "disable-scroll": true,
