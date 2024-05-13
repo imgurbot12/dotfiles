@@ -50,6 +50,7 @@ copy_config "sway/."
 copy_config "waybar/."
 copy_config "dunst/."
 copy_config "alacritty/."
+copy_config "swayosd/."
 copy_config "libinput-gestures.conf"
 
 # calcualte lattitude and longitude and generate config

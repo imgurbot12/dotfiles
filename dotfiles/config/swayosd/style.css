@@ -1,0 +1,12 @@
+
+#osd {
+  border-radius: 18px;
+}
+
+image {
+  padding: 5px 0px 5px 10px;
+}
+
+progressbar {
+  padding: 5px 10px 5px 0px;
+}

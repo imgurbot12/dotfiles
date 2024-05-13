@@ -79,7 +79,7 @@ exec swaync || dunst
 exec $player daemon
 exec redshift -c ~/.config/redshift.conf
 exec libinput-gestures
-# exec --no-startup-id libinput-gestures
+exec swayosd-server --top-margin 0.1 --style ~/.config/swayosd/style.css
 
 # Magic Fix for OBS Recording in Sway
 exec dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP=sway
