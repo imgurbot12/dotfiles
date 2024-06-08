@@ -1,6 +1,12 @@
 {
   "layer": "top",
-  "modules-left": ["custom/packages", "sway/workspaces", "sway/window"],
+  "modules-left": [
+    "custom/packages",
+    "sway/workspaces",
+    "hyprland/workspaces",
+    "sway/window",
+    "hyprland/window"
+  ],
   "modules-center": [],
   "modules-right": [
     "cava",
@@ -57,6 +63,14 @@
     "format": " {name} "
   },
   "sway/window": {
+    "format": "{title}"
+  },
+  "hyprland/workspaces": {
+    "disable-scroll": true,
+    "all-outputs": true,
+    "format": " {name} "
+  },
+  "hyprland/window": {
     "format": "{title}"
   },
   "tray": {
