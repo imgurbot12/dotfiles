@@ -22,6 +22,9 @@ HYPRWAYLAND_VER="v0.3.4"
 HYPRLAND_GIT="https://github.com/hyprwm/Hyprland"
 HYPRLAND_VER="v0.40.0"
 
+HY3_GIT="https://github.com/outfoxxed/hy3"
+HY3_VER="0.40.0"
+
 #** Init **#
 
 mkdir -p "$BUILD_DIR"
@@ -53,6 +56,9 @@ git clone "$HYPRWAYLAND_GIT" hyprwayland-scanner --branch "$HYPRWAYLAND_VER" || 
 log_info "cloning hyprland $HYPRLAND_VER"
 git clone --recursive "$HYPRLAND_GIT" hyprland --branch "$HYPRLAND_VER" || true
 
+log_info "cloning hyprland plugin hy3 $HY3_VER"
+git clone "$HY3_GIT" hy3 --branch "$HY3_VER" || true
+
 # Build Repos
 
 log_info "installing wayland-protocols $WLPROTO_VER"
@@ -82,3 +88,11 @@ log_info "installing hyprland $HYPRLAND_VER"
 cd "$BUILD_DIR/hyprland"
 make all
 sudo make install
+
+# Install Plugins
+
+log_info "installing hy3 plugin $HY3_VER"
+cd "$BUILD_DIR/hy3"
+cmake -DCMAKE_BUILD_TYPE=Release -B build
+cmake --build build
+sudo cmake --install build
