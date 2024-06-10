@@ -120,3 +120,8 @@ log_info "installing hy3 plugin $HY3_VER"
 cmake -DCMAKE_BUILD_TYPE=Release -B build
 cmake --build build
 sudo cmake --install build
+
+# Final Buildsteps
+
+log_info "installing Hyprland desktop file"
+sudo cp -vf "$BUILD_DIR/hyprland/example/hyprland.desktop" /usr/share/wayland-sessions/.
