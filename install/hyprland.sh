@@ -1,3 +1,4 @@
+#!/bin/sh
 
 set -e
 
@@ -22,6 +23,9 @@ HYPRWAYLAND_VER="v0.3.4"
 HYPRLAND_GIT="https://github.com/hyprwm/Hyprland"
 HYPRLAND_VER="v0.40.0"
 
+HYPRIDLE_GIT="https://github.com/hyprwm/hypridle"
+HYPRIDLE_VER="v0.1.2"
+
 HY3_GIT="https://github.com/outfoxxed/hy3"
 HY3_VER="0.40.0"
 
@@ -37,7 +41,8 @@ sudo apt install -y \
   librsvg2-dev \
   libtomlplusplus-dev \
   libpugixml-dev \
-  libxcb-util-dev
+  libxcb-util-dev \
+  libsdbus-c++-dev
 
 # Clone Repos
 
@@ -56,10 +61,13 @@ git clone "$HYPRWAYLAND_GIT" hyprwayland-scanner --branch "$HYPRWAYLAND_VER" || 
 log_info "cloning hyprland $HYPRLAND_VER"
 git clone --recursive "$HYPRLAND_GIT" hyprland --branch "$HYPRLAND_VER" || true
 
+log_info "cloning hypridle $HYPRIDLE_VER"
+git clone "$HYPRIDLE_GIT" hypridle --branch "$HYPRIDLE_VER" || true
+
 log_info "cloning hyprland plugin hy3 $HY3_VER"
 git clone "$HY3_GIT" hy3 --branch "$HY3_VER" || true
 
-# Build Repos
+# Build Hyprland
 
 log_info "installing wayland-protocols $WLPROTO_VER"
 cd "$BUILD_DIR/wayland-protocols"
@@ -89,10 +97,26 @@ cd "$BUILD_DIR/hyprland"
 make all
 sudo make install
 
+# Install Tools
+
+log_info "installing hypridle $HYPRIDLE_VER"
+cd "$BUILD_DIR/hypridle"
+cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -S . -B ./build
+cmake --build ./build --config Release --target hypridle -j`nproc 2>/dev/null || getconf _NPROCESSORS_CONF`
+sudo cmake --install build
+
 # Install Plugins
 
-log_info "installing hy3 plugin $HY3_VER"
+# commits from https://github.com/outfoxxed/hy3/pull/115
+log_info "patching hy3 $HY3_VER with dmg-fix PR commits"
 cd "$BUILD_DIR/hy3"
+git cherry-pick 445381f
+git cherry-pick 968cadf
+git cherry-pick 11fcce5
+git cherry-pick 3bf93f5
+git cherry-pick 0cb9391
+
+log_info "installing hy3 plugin $HY3_VER"
 cmake -DCMAKE_BUILD_TYPE=Release -B build
 cmake --build build
 sudo cmake --install build
