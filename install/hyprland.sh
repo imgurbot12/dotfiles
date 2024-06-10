@@ -27,7 +27,7 @@ HYPRIDLE_GIT="https://github.com/hyprwm/hypridle"
 HYPRIDLE_VER="v0.1.2"
 
 HY3_GIT="https://github.com/outfoxxed/hy3"
-HY3_VER="0.40.0"
+HY3_VER="hl0.40.0"
 
 #** Init **#
 
