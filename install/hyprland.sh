@@ -8,6 +8,9 @@ set -e
 
 BUILD_DIR="/tmp/hyprland-build"
 
+XCB_ERR_GIT="https://gitlab.freedesktop.org/xorg/lib/libxcb-errors"
+XCB_ERR_VER="master"
+
 WLPROTO_GIT="https://gitlab.freedesktop.org/wayland/wayland-protocols.git"
 WLPROTO_VER="1.36"
 
@@ -15,19 +18,19 @@ HYPRLANG_GIT="https://github.com/hyprwm/hyprlang"
 HYPRLANG_VER="v0.4.2"
 
 HYPRCURSOR_GIT="https://github.com/hyprwm/hyprcursor.git"
-HYPRCURSOR_VER="v0.1.7"
+HYPRCURSOR_VER="v0.1.9"
 
 HYPRWAYLAND_GIT="https://github.com/hyprwm/hyprwayland-scanner"
-HYPRWAYLAND_VER="v0.3.4"
+HYPRWAYLAND_VER="v0.3.10"
 
 HYPRLAND_GIT="https://github.com/hyprwm/Hyprland"
-HYPRLAND_VER="v0.40.0"
+HYPRLAND_VER="v0.41.0"
 
 HYPRIDLE_GIT="https://github.com/hyprwm/hypridle"
 HYPRIDLE_VER="v0.1.2"
 
 HY3_GIT="https://github.com/outfoxxed/hy3"
-HY3_VER="hl0.40.0"
+HY3_VER="hl0.41.0"
 
 #** Init **#
 
@@ -42,9 +45,16 @@ sudo apt install -y \
   libtomlplusplus-dev \
   libpugixml-dev \
   libxcb-util-dev \
-  libsdbus-c++-dev
+  libsdbus-c++-dev \
+  autoconf \
+  libtool \
+  xutils-dev \
+  xcb-proto
 
 # Clone Repos
+
+log_info "cloning xcb-errors $XCB_ERR_VER"
+git clone "$XCB_ERR_GIT" xcb-errors --branch "$XCB_ERR_VER" || true
 
 log_info "cloning wayland-protocols $WLPROTO_VER"
 git clone "$WLPROTO_GIT" wayland-protocols --branch "$WLPROTO_VER" || true
@@ -69,6 +79,13 @@ git clone "$HY3_GIT" hy3 --branch "$HY3_VER" || true
 
 # Build Hyprland
 
+log_info "installing xcb-errors $XCB_ERR_VER"
+cd "$BUILD_DIR/xcb-errors"
+./autogen.sh
+./configure --prefix=/usr
+make
+sudo make install
+
 log_info "installing wayland-protocols $WLPROTO_VER"
 cd "$BUILD_DIR/wayland-protocols"
 meson build --prefix=/usr --buildtype=release
@@ -79,6 +96,7 @@ log_info "installing hyprlang $HYPRLANG_VER"
 cd "$BUILD_DIR/hyprlang"
 cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -DCMAKE_INSTALL_PREFIX:PATH=/usr -S . -B ./build
 cmake --build ./build --config Release --target hyprlang -j`nproc 2>/dev/null || getconf _NPROCESSORS_CONF`
+sudo cmake --install build/
 
 log_info "installing hyprcursor $HYPRCURSOR_VER"
 cd "$BUILD_DIR/hyprcursor"
@@ -106,15 +124,6 @@ cmake --build ./build --config Release --target hypridle -j`nproc 2>/dev/null ||
 sudo cmake --install build
 
 # Install Plugins
-
-# commits from https://github.com/outfoxxed/hy3/pull/115
-log_info "patching hy3 $HY3_VER with dmg-fix PR commits"
-cd "$BUILD_DIR/hy3"
-git cherry-pick 445381f
-git cherry-pick 968cadf
-git cherry-pick 11fcce5
-git cherry-pick 3bf93f5
-git cherry-pick 0cb9391
 
 log_info "installing hy3 plugin $HY3_VER"
 cmake -DCMAKE_BUILD_TYPE=Release -B build

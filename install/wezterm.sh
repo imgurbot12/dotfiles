@@ -21,8 +21,9 @@ log_info "searching wezterm releases"
 urls=`curl -sL "$RELEASES_URL" | grep '"browser_download_url":' | cut -d'"' -f4`
 case $(get_distro) in
   "ubuntu"|"debian")
-    version=$(get_distro_version)
-    url=`echo "$urls" | grep -E "${OS}${VER}.deb$"`
+    version="22.04"
+    echo "$urls"
+    url=`echo "$urls" | grep -E "Ubuntu${VER}.deb$"`
     if [ ! -z "$url"  ]; then
       log_info "installing from debian package"
       curl -L "$url" -o /tmp/wezterm.deb
