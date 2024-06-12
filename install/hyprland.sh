@@ -54,7 +54,7 @@ sudo apt install -y \
 # Clone Repos
 
 log_info "cloning xcb-errors $XCB_ERR_VER"
-git clone "$XCB_ERR_GIT" xcb-errors --branch "$XCB_ERR_VER" || true
+git clone --recursive "$XCB_ERR_GIT" xcb-errors --branch "$XCB_ERR_VER" || true
 
 log_info "cloning wayland-protocols $WLPROTO_VER"
 git clone "$WLPROTO_GIT" wayland-protocols --branch "$WLPROTO_VER" || true
