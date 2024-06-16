@@ -24,7 +24,7 @@ steam
 ensure_program firejail
 
 log_info "installing custom jails"
-copy_config "firejail"
+copy_config "firejail/."
 
 log_info "jailing common applications"
 firecfg --fix
@@ -38,6 +38,9 @@ done
 
 log_info "installing patches"
 SUDO=1 file_copy "-f $PATCHES/discord.desktop /usr/share/applications/discord.desktop"
+SUDO=1 file_copy "-f $PATCHES/brave-browser /usr/local/bin/brave-browser"
+SUDO=1 file_copy "-f $PATCHES/signal-desktop /usr/local/bin/signal-desktop"
+SUDO=1 file_copy "-f $PATCHES/vesktop /usr/local/bin/vesktop"
 
 log_info "refreshing desktop environment"
 xdg-desktop-menu forceupdate || true

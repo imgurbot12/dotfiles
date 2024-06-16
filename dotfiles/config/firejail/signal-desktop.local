@@ -1,0 +1,11 @@
+ignore private-tmp
+
+mkdir /tmp/signal-tmp
+whitelist /tmp/signal-tmp
+env TMPDIR=/tmp/signal-tmp
+env TMP=/tmp/signal-tmp
+
+ignore dbus-user none
+
+dbus-user filter
+dbus-user.talk org.kde.StatusNotifierWatcher

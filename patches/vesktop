@@ -1,0 +1,2 @@
+#!/bin/sh
+exec firejail /usr/bin/vesktop --no-sandbox --ozone-platform=wayland --use-tray-icon $@

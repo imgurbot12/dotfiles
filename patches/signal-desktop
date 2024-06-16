@@ -1,0 +1,2 @@
+#!/bin/sh
+exec firejail /usr/bin/signal-desktop --no-sandbox --enable-features=WaylandWindowDecorations --ozone-platform-hint=auto --ozone-platform=wayland --use-tray-icon $@

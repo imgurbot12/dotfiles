@@ -1,0 +1,2 @@
+#!/bin/sh
+exec firejail /usr/bin/brave-browser --enable-features=UseOzonePlatform --ozone-platform=wayland $@
