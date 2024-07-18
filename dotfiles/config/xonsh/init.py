@@ -105,7 +105,7 @@ if xonsh is not None:
     # ensure paths are added to xonsh
     addpath(f'{HOME}/bin')
     addpath(f'{HOME}/.local/bin')
-    
+
     # add paths for various languages
     ensurepaths('go',    {'GOROOT': GOROOT, 'GOPATH': GOPATH})
     ensurepaths('cargo', {'CARGO_ROOT', CARGO_ROOT})
@@ -122,6 +122,7 @@ if xonsh is not None:
     cmdalias('la',   'exa', '-la')
     cmdalias('cat',  'bat')
     cmdalias('find', 'fd')
+    cmdalias('http', 'xh')
 
     # clipboard aliases
     cmdalias('pbcopy',  'xsel',  '-ib')

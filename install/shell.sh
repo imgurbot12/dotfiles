@@ -8,7 +8,7 @@
 case "$1" in
   "fish")
     ensure_program fish
-    copy_config "fish"
+    copy_config "fish/."
     log_info "fish configuration installed"
     ;;
   "bash")

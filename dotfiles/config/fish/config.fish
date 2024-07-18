@@ -82,6 +82,7 @@ cmd_alias la   "exa" "-la"
 cmd_alias cat  "bat"
 cmd_alias find "fd"
 cmd_alias rtx  "mise"
+cmd_alias http "xh"
 
 # clipboard aliases
 cmd_alias pbcopy  "wl-copy"
