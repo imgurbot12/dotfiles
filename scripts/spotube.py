@@ -87,7 +87,7 @@ def save_cookies(page: Page):
 
 with sync_playwright() as p:
     # launch headless browser and load cookies from cache
-    browser  = p.webkit.launch(headless=True)
+    browser  = p.chromium.launch(headless=True)
     page     = browser.new_page()
     load_cookies(page)
     print('playwright: loading spotify')
