@@ -1,6 +1,6 @@
 #
 # Install Various Shell Utilities
-# 
+#
 
 # load common utilies
 . "$PSScriptRoot\_common.ps1"
@@ -16,32 +16,13 @@ if (-NOT($?))
   exit 2
 }
 
-Write-Host "[INFO]: installing rust binaries"
-cargo binstall bat -y 
-cargo binstall ripgrep -y 
-cargo binstall fd-find -y 
-cargo binstall du-dust -y 
-cargo binstall git-delta -y 
-
-if ((Confirm "Do you want to install Rust Coreutils?") -eq 1)
-{
-  Write-Host "[WARN]: skipping Coreutils install"
-  exit 0
-}
-
-# install coreutils
-Write-Host "[INFO]: cloning coreutils"
-if (-NOT(Test-Path coreutils))
-{
-  git clone https://github.com/uutils/coreutils
-}
-
-Write-Host "[INFO]: building coreutils"
-Set-Location coreutils
-cargo build --release --features windows
-
 Write-Host "[INFO]: installing coreutils"
-cargo install --path . --locked
+Win-Install uutils.coreutils coreutils
 
-Write-Host "[INFO]: cleaning up build-dir"
-$null = Remove-Item -LiteralPath coreutils -Force -Recurse
+Write-Host "[INFO]: installing rust binaries"
+cargo binstall bat -y
+cargo binstall ripgrep -y
+cargo binstall fd-find -y
+cargo binstall du-dust -y
+cargo binstall git-delta -y
+

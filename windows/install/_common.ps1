@@ -44,6 +44,13 @@ function global:Scoop-Get {
   }
 }
 
+function global:Win-Install {
+  param([string]$package, [string]$name)
+  $program=if ("$name" -eq "") { $bin } else { $name }
+  echo "[INFO]: installing $program w/ winget"
+  winget install $package
+}
+
 function global:Confirm {
   param([string]$prompt)
   $confirmation = Read-Host "$prompt [y/n]"
@@ -66,13 +73,13 @@ function Add-Path {
     [Parameter(Mandatory, Position=0)]
     [string] $LiteralPath,
     [ValidateSet('User', 'CurrentUser', 'Machine', 'LocalMachine')]
-    [string] $Scope 
+    [string] $Scope
   )
 
   Set-StrictMode -Version 1; $ErrorActionPreference = 'Stop'
 
   $isMachineLevel = $Scope -in 'Machine', 'LocalMachine'
-  if ($isMachineLevel -and -not $($ErrorActionPreference = 'Continue'; net session 2>$null)) { throw "You must run AS ADMIN to update the machine-level Path environment variable." }  
+  if ($isMachineLevel -and -not $($ErrorActionPreference = 'Continue'; net session 2>$null)) { throw "You must run AS ADMIN to update the machine-level Path environment variable." }
 
   $regPath = 'registry::' + ('HKEY_CURRENT_USER\Environment', 'HKEY_LOCAL_MACHINE\System\CurrentControlSet\Control\Session Manager\Environment')[$isMachineLevel]
 
